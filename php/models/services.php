@@ -13,12 +13,12 @@ class Servicio {
   public string $created_at;
   public string $updated_at;
 
-  public function __construct(int $id, string $name, string $category, int $price, bool $from, string $duration, bool $popular, string $description, string $image, bool $active, string $created_at, string $updated_at) {
+  public function __construct(int $id, string $name, string $category, int $price, bool $from_of, string $duration, bool $popular, string $description, string $image, bool $active, string $created_at, string $updated_at) {
     $this->id = $id;
     $this->name = $name;
     $this->category = $category;
     $this->price = $price;
-    $this->from = $from;
+    $this->from_of = $from_of;
     $this->duration = $duration;
     $this->popular = $popular;
     $this->description = $description;
