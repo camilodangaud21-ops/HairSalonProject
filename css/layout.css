@@ -1,0 +1,228 @@
+/* ══════════════════════════════════════════
+   LAYOUT.CSS
+   Overall page structure: hero, info bar,
+   tabs, panels, section grids, footer, and
+   responsive rules.
+   ══════════════════════════════════════════ */
+
+/* ── HEADER / HERO ── */
+.hero {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: #1a1510;
+}
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, var(--dark) 100%);
+}
+
+/* ── INFO BAR ── */
+.info-bar {
+  padding: 16px var(--gap) 0;
+}
+.info-bar h1 {
+  font-size: 1.35rem;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  color: var(--white);
+  text-transform: lowercase;
+}
+.info-bar h1 span {
+  color: var(--gold);
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.meta-row .star {
+  color: var(--gold);
+  font-size: 0.9rem;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin: 16px 0 0;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ── PANEL ── */
+.panel {
+  display: none;
+  padding: var(--gap);
+}
+.panel.active {
+  display: block;
+}
+
+/* ── ABOUT (grid general) ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+.about-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+/* ── SERVICIOS (grid general) ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-width: 900px;
+  margin: 0 auto; 
+}
+
+@media (min-width: 480px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.no-results {
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 0;
+  font-family: sans-serif;
+}
+
+/* ── EQUIPO (grid general) ── */
+
+.equipo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (min-width: 480px) {
+  .equipo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── RESEÑAS (layout general) ── */
+.rating-summary {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.rating-bars {
+  flex: 1;
+}
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  font-family: sans-serif;
+}
+.bar-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.resena-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 24px var(--gap);
+  margin-top: 24px;
+}
+.footer-brand {
+  margin-bottom: 14px;
+}
+.footer-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+.footer-copy {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: sans-serif;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — DESKTOP
+   ══════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .hero {
+    height: 320px;
+  }
+  .info-bar h1 {
+    font-size: 1.8rem;
+  }
+  .about-grid {
+    grid-template-columns: 1fr 300px;
+  }
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .equipo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .footer-copy {
+    grid-column: 1/-1;
+  }
+}
