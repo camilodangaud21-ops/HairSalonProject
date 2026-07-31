@@ -4,7 +4,7 @@ class Servicio {
   public string $name;
   public string $category;
   public int    $price;
-  public bool   $from;
+  public bool   $from_of;
   public string $duration;
   public bool   $popular;
   public string $description;
