@@ -8,6 +8,34 @@
 // ── CONFIG ──
 const WHATSAPP = "573000000000";
 
+// ── LOGIN MODAL ──
+function openLogin() {
+  document.getElementById('login-modal').style.display = 'flex';
+}
+
+function closeLogin() {
+  document.getElementById('login-modal').style.display = 'none';
+}
+
+async function submitLogin() {
+  const email    = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  const res  = await fetch('/peluqueria/php/auth/login.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    window.location.href = data.redirect;
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
 const catClass = {
   Peluquería: "cat-pelq",
   "Manicure y pedicure": "cat-mani",

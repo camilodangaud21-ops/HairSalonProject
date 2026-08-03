@@ -410,3 +410,71 @@
 .footer-links a:hover {
   color: var(--text);
 }
+/* ── LOGIN MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 90%;
+  max-width: 360px;
+}
+.modal-title {
+  color: var(--gold);
+  font-size: 1rem;
+  margin-bottom: 16px;
+  font-weight: normal;
+}
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  outline: none;
+}
+.modal-error {
+  color: #e55;
+  font-size: 0.8rem;
+  margin-top: 8px;
+  display: none;
+}
+.modal-cancel {
+  width: 100%;
+  margin-top: 8px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.btn-login {
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 6px 14px;
+  color: var(--gold);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: sans-serif;
+  text-decoration: none;
+}
+.btn-login:hover {
+  background: var(--gold);
+  color: var(--dark);
+}

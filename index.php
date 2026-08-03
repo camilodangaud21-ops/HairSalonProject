@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,7 +22,20 @@
 </div>
 
 <!-- INFO BAR -->
+
+
 <div class="info-bar">
+  <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+    <?php if (isset($_SESSION['user'])): ?>
+      <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+        <a href="admin/dashboard.php" class="btn-login">⚙️ Panel admin</a>
+      <?php else: ?>
+        <a href="php/auth/logout.php" class="btn-login">👤 Cerrar sesión</a>
+      <?php endif; ?>
+    <?php else: ?>
+      <button class="btn-login" onclick="openLogin()">Iniciar sesión</button>
+    <?php endif; ?>
+  </div>
   <h1>isabel rojas <span>peluquería y spa</span></h1>
   <div class="meta-row">
     <span class="star">★</span>
@@ -179,7 +195,17 @@
   </div>
   <div class="footer-copy">© 2026 Isabel Rojas Beauty Salón & Spa · Cartagena, Colombia</div>
 </footer>
-
+<!-- LOGIN MODAL -->
+<div id="login-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 class="modal-title">Iniciar sesión</h2>
+    <input id="login-email" class="modal-input" type="email" placeholder="Correo electrónico"/>
+    <input id="login-password" class="modal-input" type="password" placeholder="Contraseña"/>
+    <button onclick="submitLogin()" class="btn-reservar" style="width:100%; padding:10px;">Ingresar</button>
+    <p id="login-error" class="modal-error">Correo o contraseña incorrectos</p>
+    <button onclick="closeLogin()" class="modal-cancel">Cancelar</button>
+  </div>
+</div>
 <script src="js/ui.js"></script>
 </body>
 </html>
