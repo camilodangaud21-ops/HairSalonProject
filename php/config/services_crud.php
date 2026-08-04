@@ -1,5 +1,6 @@
 <?php
 require_once 'conection.php';
+require_once '../models/services.php';
 
 class services_crud {
   private $conn;
