@@ -1,0 +1,127 @@
+const API = '/peluqueria/php/api/services_api.php';
+
+let services  = [];
+let editingId = null;
+
+async function loadServices() {
+  const res = await fetch(`${API}?action=all`);
+  services  = await res.json();
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('services-tbody');
+  tbody.innerHTML = services.map(s => `
+    <tr>
+      <td>${s.name}</td>
+      <td>${s.category}</td>
+      <td>$${Number(s.price).toLocaleString('es-CO')}${s.from_of == 1 ? ' (desde)' : ''}</td>
+      <td>${s.duration}</td>
+      <td>${s.popular == 1 ? '⭐' : '—'}</td>
+      <td>
+        <button onclick="editService(${s.id})" class="btn-small">✏️ Editar</button>
+        <button onclick="deleteService(${s.id})" class="btn-small btn-danger">🗑️ Eliminar</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openServiceForm() {
+  editingId = null;
+  document.getElementById('service-modal-title').textContent = 'Nuevo servicio';
+  document.getElementById('service-id').value = '';
+  document.getElementById('service-name').value = '';
+  document.getElementById('service-category').value = 'Peluquería';
+  document.getElementById('service-price').value = '';
+  document.getElementById('service-from-of').checked = false;
+  document.getElementById('service-duration').value = '';
+  document.getElementById('service-popular').checked = false;
+  document.getElementById('service-description').value = '';
+  document.getElementById('service-image').value = '';
+  document.getElementById('service-error').style.display = 'none';
+  document.getElementById('service-modal').style.display = 'flex';
+}
+
+function closeServiceForm() {
+  document.getElementById('service-modal').style.display = 'none';
+}
+
+function editService(id) {
+  const s = services.find(x => x.id == id);
+  if (!s) return;
+  editingId = id;
+  document.getElementById('service-modal-title').textContent = 'Editar servicio';
+  document.getElementById('service-id').value = s.id;
+  document.getElementById('service-name').value = s.name;
+  document.getElementById('service-category').value = s.category;
+  document.getElementById('service-price').value = s.price;
+  document.getElementById('service-from-of').checked = s.from_of == 1;
+  document.getElementById('service-duration').value = s.duration;
+  document.getElementById('service-popular').checked = s.popular == 1;
+  document.getElementById('service-description').value = s.description || '';
+  document.getElementById('service-image').value = s.image || '';
+  document.getElementById('service-error').style.display = 'none';
+  document.getElementById('service-modal').style.display = 'flex';
+}
+
+async function saveService() {
+  const errorEl = document.getElementById('service-error');
+  const payload = {
+    name: document.getElementById('service-name').value.trim(),
+    category: document.getElementById('service-category').value,
+    price: document.getElementById('service-price').value,
+    from_of: document.getElementById('service-from-of').checked ? 1 : 0,
+    duration: document.getElementById('service-duration').value.trim(),
+    popular: document.getElementById('service-popular').checked ? 1 : 0,
+    description: document.getElementById('service-description').value.trim(),
+    image: document.getElementById('service-image').value.trim(),
+  };
+
+  if (!payload.name || !payload.category || !payload.price || !payload.duration) {
+    errorEl.textContent = 'Completa nombre, categoría, precio y duración.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const url = editingId
+      ? `${API}?action=update&id=${editingId}`
+      : `${API}?action=create`;
+
+    const res  = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      closeServiceForm();
+      loadServices();
+    } else {
+      errorEl.textContent = data.message || 'No se pudo guardar el servicio.';
+      errorEl.style.display = 'block';
+    }
+  } catch (err) {
+    errorEl.textContent = 'Error de conexión, intenta de nuevo.';
+    errorEl.style.display = 'block';
+  }
+}
+
+async function deleteService(id) {
+  if (!confirm('¿Seguro que quieres eliminar este servicio?')) return;
+
+  try {
+    const res  = await fetch(`${API}?action=delete&id=${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      loadServices();
+    } else {
+      alert(data.message || 'No se pudo eliminar el servicio.');
+    }
+  } catch (err) {
+    alert('Error de conexión, intenta de nuevo.');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadServices);
