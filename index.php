@@ -22,13 +22,11 @@ session_start();
 </div>
 
 <!-- INFO BAR -->
-
-
 <div class="info-bar">
   <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
     <?php if (isset($_SESSION['user'])): ?>
       <?php if ($_SESSION['user']['role'] === 'admin'): ?>
-        <a href="admin/dashboard.php" class="btn-login">⚙️ Panel admin</a>
+        <a href="admin/pages/dashboard.php" class="btn-login">⚙️ Panel admin</a>
       <?php else: ?>
         <a href="php/auth/logout.php" class="btn-login">👤 Cerrar sesión</a>
       <?php endif; ?>
