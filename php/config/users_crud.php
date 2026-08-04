@@ -9,7 +9,8 @@ class users_crud {
     global $conn;
     $this->conn = $conn;
   }
-    //read all
+
+  //read all
   public function getAll(): array {
     $result = mysqli_query($this->conn, "SELECT * FROM users");
     $users  = [];
@@ -18,18 +19,21 @@ class users_crud {
     }
     return $users;
   }
- //read by id
+
+  //read by id
   public function getById(int $id): array|null {
     $result = mysqli_query($this->conn, "SELECT * FROM users WHERE id = $id");
     return mysqli_fetch_assoc($result) ?: null;
   }
-//read by email
+
+  //read by email
   public function getByEmail(string $email): array|null {
     $email  = mysqli_real_escape_string($this->conn, $email);
     $result = mysqli_query($this->conn, "SELECT * FROM users WHERE email = '$email'");
     return mysqli_fetch_assoc($result) ?: null;
   }
-//create user
+
+  //create user
   public function create(array $data): bool {
     $first_name = mysqli_real_escape_string($this->conn, $data['first_name']);
     $last_name  = mysqli_real_escape_string($this->conn, $data['last_name']);
@@ -37,12 +41,13 @@ class users_crud {
     $password   = password_hash($data['password'], PASSWORD_BCRYPT);
     $role       = mysqli_real_escape_string($this->conn, $data['role']);
 
-    $sql = "INSERT INTO users (first_name, last_name, email, password, role, active, created_at, updated_at)
-            VALUES ('$first_name','$last_name','$email','$password','$role',1,NOW(),NOW())";
+    $sql = "INSERT INTO users (first_name, last_name, email, password, role)
+            VALUES ('$first_name','$last_name','$email','$password','$role')";
 
     return mysqli_query($this->conn, $sql);
   }
-//update user
+
+  //update user
   public function update(int $id, array $data): bool {
     $first_name = mysqli_real_escape_string($this->conn, $data['first_name']);
     $last_name  = mysqli_real_escape_string($this->conn, $data['last_name']);
@@ -51,15 +56,15 @@ class users_crud {
     $sql = "UPDATE users SET
               first_name = '$first_name',
               last_name  = '$last_name',
-              email      = '$email',
-              updated_at = NOW()
+              email      = '$email'
             WHERE id = $id";
 
     return mysqli_query($this->conn, $sql);
   }
-//delete user
+
+  //delete user (físico, ya que no hay columna 'active')
   public function delete(int $id): bool {
-    return mysqli_query($this->conn, "UPDATE users SET active = 0 WHERE id = $id");
+    return mysqli_query($this->conn, "DELETE FROM users WHERE id = $id");
   }
 
 }

@@ -19,7 +19,7 @@ if ($email === '' || $password === '') {
 $crud = new users_crud();
 $user = $crud->getByEmail($email);
 
-if (!$user || !$user['active']) {
+if (!$user) {
   echo json_encode(['success' => false, 'message' => 'Correo o contraseña incorrectos']);
   exit;
 }
