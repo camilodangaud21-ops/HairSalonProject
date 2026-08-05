@@ -10,9 +10,19 @@ class services_crud {
     $this->conn = $conn;
   }
 
-  //read all
+  //read all (for public site, only active services)
   public function getAll(): array {
     $result   = mysqli_query($this->conn, "SELECT * FROM services WHERE active = 1");
+    $services = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+      $services[] = $row;
+    }
+    return $services;
+  }
+
+  //read all (for admin dashboard, includes active and inactive)
+  public function getAllAdmin(): array {
+    $result   = mysqli_query($this->conn, "SELECT * FROM services");
     $services = [];
     while ($row = mysqli_fetch_assoc($result)) {
       $services[] = $row;
@@ -82,12 +92,18 @@ class services_crud {
     return mysqli_query($this->conn, $sql);
   }
 
-  //delete service (soft delete)
+  //activate/deactivate (show or hide to the client without deleting the record)
+  public function toggleActive(int $id, bool $active): bool {
+    $value = $active ? 1 : 0;
+    return mysqli_query($this->conn, "UPDATE services SET active = $value WHERE id = $id");
+  }
+
+  //delete service (soft delete, keep record in case you need it elsewhere)
   public function delete(int $id): bool {
     return mysqli_query($this->conn, "UPDATE services SET active = 0 WHERE id = $id");
   }
 
-  //delete service (hard delete)
+  //delete service (hard delete, permanently removes the record)
   public function hardDelete(int $id): bool {
     return mysqli_query($this->conn, "DELETE FROM services WHERE id = $id");
   }

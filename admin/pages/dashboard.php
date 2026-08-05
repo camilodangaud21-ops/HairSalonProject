@@ -42,6 +42,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
         <th>Precio</th>
         <th>Duración</th>
         <th>Popular</th>
+        <th>Estado</th>
         <th>Acciones</th>
       </tr>
     </thead>

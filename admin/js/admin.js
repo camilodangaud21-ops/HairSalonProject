@@ -4,7 +4,7 @@ let services  = [];
 let editingId = null;
 
 async function loadServices() {
-  const res = await fetch(`${API}?action=all`);
+  const res = await fetch(`${API}?action=allAdmin`);
   services  = await res.json();
   renderTable();
 }
@@ -12,18 +12,40 @@ async function loadServices() {
 function renderTable() {
   const tbody = document.getElementById('services-tbody');
   tbody.innerHTML = services.map(s => `
-    <tr>
+    <tr style="${s.active == 0 ? 'opacity:.5;' : ''}">
       <td>${s.name}</td>
       <td>${s.category}</td>
       <td>$${Number(s.price).toLocaleString('es-CO')}${s.from_of == 1 ? ' (desde)' : ''}</td>
       <td>${s.duration}</td>
       <td>${s.popular == 1 ? '⭐' : '—'}</td>
+      <td>${s.active == 1 ? '✅ Activo' : '🚫 Oculto'}</td>
       <td>
         <button onclick="editService(${s.id})" class="btn-small">✏️ Editar</button>
+        <button onclick="toggleActive(${s.id}, ${s.active == 1 ? 0 : 1})" class="btn-small">
+          ${s.active == 1 ? '🚫 Ocultar' : '✅ Mostrar'}
+        </button>
         <button onclick="deleteService(${s.id})" class="btn-small btn-danger">🗑️ Eliminar</button>
       </td>
     </tr>
   `).join('');
+}
+
+async function toggleActive(id, newActive) {
+  try {
+    const res  = await fetch(`${API}?action=toggleActive&id=${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active: newActive })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadServices();
+    } else {
+      alert(data.message || 'No se pudo cambiar el estado.');
+    }
+  } catch (err) {
+    alert('Error de conexión, intenta de nuevo.');
+  }
 }
 
 function openServiceForm() {
@@ -109,7 +131,7 @@ async function saveService() {
 }
 
 async function deleteService(id) {
-  if (!confirm('¿Seguro que quieres eliminar este servicio?')) return;
+  if (!confirm('Esto eliminará el servicio permanentemente. ¿Continuar?')) return;
 
   try {
     const res  = await fetch(`${API}?action=delete&id=${id}`, { method: 'POST' });

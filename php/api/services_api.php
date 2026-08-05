@@ -23,6 +23,11 @@ switch ($action) {
     echo json_encode($crud->getAll());
     break;
 
+  case 'allAdmin':
+    requireAdmin();
+    echo json_encode($crud->getAllAdmin());
+    break;
+
   case 'byId':
     $id = (int) ($_GET['id'] ?? 0);
     echo json_encode($crud->getById($id));
@@ -46,10 +51,18 @@ switch ($action) {
     echo json_encode(['success' => (bool) $crud->update($id, $data)]);
     break;
 
+  case 'toggleActive':
+    requireAdmin();
+    $data   = json_decode(file_get_contents('php://input'), true);
+    $id     = (int) ($_GET['id'] ?? 0);
+    $active = (bool) ($data['active'] ?? false);
+    echo json_encode(['success' => (bool) $crud->toggleActive($id, $active)]);
+    break;
+
   case 'delete':
     requireAdmin();
     $id = (int) ($_GET['id'] ?? 0);
-    echo json_encode(['success' => (bool) $crud->delete($id)]);
+    echo json_encode(['success' => (bool) $crud->hardDelete($id)]);
     break;
 
   default:
