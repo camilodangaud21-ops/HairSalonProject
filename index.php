@@ -1,5 +1,9 @@
 <?php
 session_start();
+require_once 'php/config/settings_crud.php';
+
+$settingsCrud = new settings_crud();
+$settings     = $settingsCrud->getAllAsMap();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -16,7 +20,6 @@ session_start();
 
 <!-- HERO -->
 <div class="hero">
-  <!-- Reemplaza el src con tu imagen del banner (idealmente assets/images/banner.jpg) -->
   <img class="hero-bg" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80" alt="Isabel Rojas Beauty Salón" />
   <div class="hero-overlay"></div>
 </div>
@@ -39,11 +42,11 @@ session_start();
     <span class="star">★</span>
     <span>4.3 (6 reseñas)</span>
     <span>·</span>
-    <span class="open-badge">Abierto hoy 09:00 - 20:00</span>
+    <span class="open-badge">Abierto hoy <?= htmlspecialchars($settings['schedule_today'] ?? '09:00 - 20:00') ?></span>
   </div>
   <div class="meta-row">
     <span class="info-icon">📍</span>
-    <span>Bocagrande avenida San Martín, centro comercial el pueblito local 12, Cartagena</span>
+    <span><?= htmlspecialchars($settings['address'] ?? '') ?></span>
   </div>
   <div class="badges">
     <span class="badge">Salón de belleza</span>
@@ -67,6 +70,7 @@ session_start();
   <div class="about-grid" style="margin-bottom:20px;">
     <div class="about-text">
       <h2>Sobre nosotros</h2>
+      <p style="color:var(--muted); margin: 8px 0 14px;"><?= htmlspecialchars($settings['about_us_text'] ?? '') ?></p>
       <div class="about-cats">
         <span class="about-cat">Salón de belleza</span>
         <span class="about-cat">Spa</span>
@@ -79,15 +83,14 @@ session_start();
       <h3>Dirección</h3>
       <div class="info-row">
         <span class="info-icon">📍</span>
-        <span>Bocagrande avenida San Martín centro comercial el pueblito local 12, Cartagena, Colombia</span>
+        <span><?= htmlspecialchars($settings['address'] ?? '') ?></span>
       </div>
       <h3 style="margin-top:10px;">Horario hoy</h3>
       <div class="info-row">
         <span class="info-icon">🕐</span>
-        <span>09:00 – 20:00</span>
+        <span><?= htmlspecialchars($settings['schedule_today'] ?? '') ?></span>
       </div>
       <div class="portfolio-grid">
-        <!-- Agrega tus fotos reales aquí (idealmente assets/images/portfolio/) -->
         <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&q=70" alt="foto 1"/>
         <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=200&q=70" alt="foto 2"/>
         <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=200&q=70" alt="foto 3"/>
@@ -167,11 +170,11 @@ session_start();
 <footer>
   <div class="footer-brand">
     <h4>isabel rojas peluquería y spa</h4>
-    <p>Tu experiencia de belleza y cuidado personal en un solo lugar.</p>
+    <p><?= htmlspecialchars($settings['about_us_text'] ?? '') ?></p>
     <div class="footer-social">
       <a class="social-btn" href="#" aria-label="Instagram">📸</a>
       <a class="social-btn" href="#" aria-label="Facebook">📘</a>
-      <a class="social-btn" href="https://wa.me/57TUNUMERO" aria-label="WhatsApp">💬</a>
+      <a class="social-btn" href="https://wa.me/<?= htmlspecialchars($settings['whatsapp_number'] ?? '') ?>" aria-label="WhatsApp">💬</a>
     </div>
   </div>
   <div class="footer-links">
@@ -184,15 +187,16 @@ session_start();
     <h5>Más información</h5>
     <div class="info-row" style="margin-bottom:8px;">
       <span class="info-icon">📍</span>
-      <span style="font-size:.8rem;color:var(--muted);">Bocagrande avenida San Martín, centro comercial el pueblito local 12, Cartagena</span>
+      <span style="font-size:.8rem;color:var(--muted);"><?= htmlspecialchars($settings['address'] ?? '') ?></span>
     </div>
     <div class="info-row">
       <span class="info-icon">🕐</span>
-      <span style="font-size:.8rem;color:var(--muted);">09:00 – 20:00</span>
+      <span style="font-size:.8rem;color:var(--muted);"><?= htmlspecialchars($settings['schedule_today'] ?? '') ?></span>
     </div>
   </div>
   <div class="footer-copy">© 2026 Isabel Rojas Beauty Salón & Spa · Cartagena, Colombia</div>
 </footer>
+
 <!-- LOGIN MODAL -->
 <div id="login-modal" class="modal-overlay">
   <div class="modal-box">
@@ -204,6 +208,10 @@ session_start();
     <button onclick="closeLogin()" class="modal-cancel">Cancelar</button>
   </div>
 </div>
+
+<script>
+  const SITE_WHATSAPP = <?= json_encode($settings['whatsapp_number'] ?? '573000000000') ?>;
+</script>
 <script src="js/ui.js"></script>
 </body>
 </html>

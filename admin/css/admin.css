@@ -153,3 +153,24 @@ body {
     white-space: nowrap;
   }
 }
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
+
+.settings-form {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: .85rem;
+  color: var(--admin-text-muted);
+}
+
+.settings-label .modal-input {
+  color: var(--admin-text);
+}

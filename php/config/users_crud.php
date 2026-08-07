@@ -1,6 +1,6 @@
 <?php
-require_once 'conection.php';
-require_once '../models/users.php';
+require_once __DIR__ . '/conection.php';
+require_once __DIR__ . '/../models/users.php';
 
 class users_crud {
   private $conn;

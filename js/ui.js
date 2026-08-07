@@ -6,7 +6,7 @@
    ══════════════════════════════════════════ */
 
 // ── CONFIG ──
-const WHATSAPP = "573000000000";
+const WHATSAPP = typeof SITE_WHATSAPP !== 'undefined' ? SITE_WHATSAPP : "573000000000";
 
 // ── LOGIN MODAL ──
 function openLogin() {

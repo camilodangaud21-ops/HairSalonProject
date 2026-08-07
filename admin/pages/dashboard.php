@@ -28,29 +28,72 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   </div>
 </header>
 
-<main class="admin-main">
-  <section class="admin-toolbar">
-    <h2>Servicios</h2>
-    <button class="btn-reservar" onclick="openServiceForm()">+ Nuevo servicio</button>
-  </section>
+<!-- ADMIN TABS -->
+<div class="tabs">
+  <div class="tab active" data-admintab="servicios">Servicios</div>
+  <div class="tab" data-admintab="configuracion">Configuración</div>
+</div>
 
-  <table class="admin-table" id="services-table">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Categoría</th>
-        <th>Precio</th>
-        <th>Duración</th>
-        <th>Popular</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="services-tbody"></tbody>
-  </table>
+<main class="admin-main">
+
+  <!-- ── PANEL SERVICIOS ── -->
+  <div class="admin-panel active" id="admin-panel-servicios">
+    <section class="admin-toolbar">
+      <h2>Servicios</h2>
+      <button class="btn-reservar" onclick="openServiceForm()">+ Nuevo servicio</button>
+    </section>
+
+    <table class="admin-table" id="services-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Duración</th>
+          <th>Popular</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="services-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── PANEL CONFIGURACIÓN ── -->
+  <div class="admin-panel" id="admin-panel-configuracion">
+    <section class="admin-toolbar">
+      <h2>Configuración del sitio</h2>
+    </section>
+
+    <div class="settings-form">
+      <label class="settings-label">
+        Número de WhatsApp (con código de país, sin +)
+        <input class="modal-input" id="setting-whatsapp_number" placeholder="573000000000" />
+      </label>
+
+      <label class="settings-label">
+        Texto "Sobre nosotros"
+        <textarea class="modal-input" id="setting-about_us_text" rows="4"></textarea>
+      </label>
+
+      <label class="settings-label">
+        Horario de hoy
+        <input class="modal-input" id="setting-schedule_today" placeholder="09:00 - 20:00" />
+      </label>
+
+      <label class="settings-label">
+        Dirección
+        <input class="modal-input" id="setting-address" placeholder="Dirección completa" />
+      </label>
+
+      <button onclick="saveSettings()" class="btn-reservar" style="padding:10px 24px;">Guardar cambios</button>
+      <p id="settings-message" style="display:none; margin-top:10px;"></p>
+    </div>
+  </div>
+
 </main>
 
-<!-- FORM MODAL -->
+<!-- FORM MODAL (servicios) -->
 <div id="service-modal" class="modal-overlay">
   <div class="modal-box">
     <h2 class="modal-title" id="service-modal-title">Nuevo servicio</h2>

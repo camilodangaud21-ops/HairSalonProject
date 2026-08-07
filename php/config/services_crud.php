@@ -1,6 +1,6 @@
 <?php
-require_once 'conection.php';
-require_once '../models/services.php';
+require_once __DIR__ . '/conection.php';
+require_once __DIR__ . '/../models/services.php';
 
 class services_crud {
   private $conn;
