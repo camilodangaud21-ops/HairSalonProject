@@ -45,7 +45,7 @@ private $conn;
     return mysqli_query($this->conn, "UPDATE site_settings SET setting_value = '$value' WHERE setting_key = '$key'");
   }
 
-  // update several settings a la vez (for the dashboard form)
+  // update several settings at once (for the dashboard form)
   public function updateMany(array $data): bool {
     $ok = true;
     foreach ($data as $key => $value) {

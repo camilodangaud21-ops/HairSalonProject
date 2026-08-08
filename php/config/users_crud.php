@@ -62,7 +62,7 @@ class users_crud {
     return mysqli_query($this->conn, $sql);
   }
 
-  //delete user (físico, ya que no hay columna 'active')
+  //delete user (hard delete, since there is no 'active' column)
   public function delete(int $id): bool {
     return mysqli_query($this->conn, "DELETE FROM users WHERE id = $id");
   }

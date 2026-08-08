@@ -3,11 +3,10 @@ session_start();
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-require_once '../config/conection.php';
-require_once '../config/services_crud.php';
+require_once __DIR__ . '/../controllers/services_controller.php';
 
-$crud   = new services_crud();
-$action = $_GET['action'] ?? 'all';
+$controller = new services_controller();
+$action     = $_GET['action'] ?? 'all';
 
 function requireAdmin() {
   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
@@ -20,35 +19,35 @@ function requireAdmin() {
 switch ($action) {
 
   case 'all':
-    echo json_encode($crud->getAll());
+    echo json_encode($controller->getAll());
     break;
 
   case 'allAdmin':
     requireAdmin();
-    echo json_encode($crud->getAllAdmin());
+    echo json_encode($controller->getAllAdmin());
     break;
 
   case 'byId':
     $id = (int) ($_GET['id'] ?? 0);
-    echo json_encode($crud->getById($id));
+    echo json_encode($controller->getById($id));
     break;
 
   case 'byCategory':
     $category = $_GET['category'] ?? '';
-    echo json_encode($crud->getByCategory($category));
+    echo json_encode($controller->getByCategory($category));
     break;
 
   case 'create':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
-    echo json_encode(['success' => (bool) $crud->create($data)]);
+    echo json_encode($controller->create($data));
     break;
 
   case 'update':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
     $id   = (int) ($_GET['id'] ?? 0);
-    echo json_encode(['success' => (bool) $crud->update($id, $data)]);
+    echo json_encode($controller->update($id, $data));
     break;
 
   case 'toggleActive':
@@ -56,13 +55,13 @@ switch ($action) {
     $data   = json_decode(file_get_contents('php://input'), true);
     $id     = (int) ($_GET['id'] ?? 0);
     $active = (bool) ($data['active'] ?? false);
-    echo json_encode(['success' => (bool) $crud->toggleActive($id, $active)]);
+    echo json_encode($controller->toggleActive($id, $active));
     break;
 
   case 'delete':
     requireAdmin();
     $id = (int) ($_GET['id'] ?? 0);
-    echo json_encode(['success' => (bool) $crud->hardDelete($id)]);
+    echo json_encode($controller->delete($id));
     break;
 
   default:

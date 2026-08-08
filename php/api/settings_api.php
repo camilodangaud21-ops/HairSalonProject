@@ -3,11 +3,10 @@ session_start();
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-require_once '../config/conection.php';
-require_once '../config/settings_crud.php';
+require_once __DIR__ . '/../controllers/settings_controller.php';
 
-$crud   = new settings_crud();
-$action = $_GET['action'] ?? 'all';
+$controller = new settings_controller();
+$action     = $_GET['action'] ?? 'all';
 
 function requireAdmin() {
   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
@@ -21,13 +20,13 @@ switch ($action) {
 
   case 'all':
     requireAdmin();
-    echo json_encode($crud->getAll());
+    echo json_encode($controller->getAll());
     break;
 
   case 'update':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
-    echo json_encode(['success' => (bool) $crud->updateMany($data)]);
+    echo json_encode($controller->updateMany($data));
     break;
 
   default:

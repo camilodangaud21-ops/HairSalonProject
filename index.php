@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once 'php/config/settings_crud.php';
+require_once 'php/controllers/settings_controller.php';
 
-$settingsCrud = new settings_crud();
-$settings     = $settingsCrud->getAllAsMap();
+$settingsController = new settings_controller();
+$settings = $settingsController->getAllAsMap();
 ?>
 <!DOCTYPE html>
 <html lang="es">
