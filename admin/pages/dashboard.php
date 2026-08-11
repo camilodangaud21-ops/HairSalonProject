@@ -1,5 +1,6 @@
 <?php
 session_start();
+// Admin dashboard page
 
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   header('Location: /peluqueria/index.php');

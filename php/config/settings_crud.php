@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/site_settings.php';
 require_once __DIR__ . '/conection.php';
+// Config: settings CRUD
 
 class settings_crud {
 private $conn;

@@ -1,4 +1,5 @@
 <?php
+// Model: services
 class services {
   public int    $id;
   public string $name;

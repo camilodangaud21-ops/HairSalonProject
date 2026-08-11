@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../controllers/settings_controller.php';
+// API: settings endpoints
 
 $controller = new settings_controller();
 $action     = $_GET['action'] ?? 'all';

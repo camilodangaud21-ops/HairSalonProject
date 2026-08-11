@@ -1,5 +1,6 @@
 <?php
 session_start();
+// Public homepage: renders site with settings
 require_once 'php/controllers/settings_controller.php';
 
 $settingsController = new settings_controller();

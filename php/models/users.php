@@ -1,4 +1,5 @@
 <?php
+// Model: users
 class users {
     public int    $id;
     public string $first_name;

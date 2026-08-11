@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__ . '/../config/settings_crud.php';
+// Controller: settings operations
 
 class settings_controller {
   private $crud;
 
-  // claves permitidas — evita que alguien mande una clave inventada por el body
+  // allowed keys — prevents sending arbitrary keys in request body
   private const ALLOWED_KEYS = [
     'whatsapp_number',
     'about_us_text',
@@ -16,7 +17,7 @@ class settings_controller {
     $this->crud = new settings_crud();
   }
 
-  // ── VALIDACIÓN ──
+  // ── VALIDATION ──
   private function validate(array $data): array {
     $errors = [];
 
@@ -43,7 +44,7 @@ class settings_controller {
     return $errors;
   }
 
-  // ── ACCIONES ──
+  // ── ACTIONS ──
   public function getAll(): array {
     return $this->crud->getAll();
   }

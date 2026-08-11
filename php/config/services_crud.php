@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/conection.php';
 require_once __DIR__ . '/../models/services.php';
+// Config: services CRUD
 
 class services_crud {
   private $conn;

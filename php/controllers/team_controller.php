@@ -1,15 +1,14 @@
 <?php
-require_once __DIR__ . '/../config/services_crud.php';
-// Controller: services operations
+require_once __DIR__ . '/../config/team_crud.php';
+// Controller: team operations
 
-class services_controller {
+class team_controller {
   private $crud;
 
   public function __construct() {
-    $this->crud = new services_crud();
+    $this->crud = new team_crud();
   }
 
-  // ── VALIDATION ──
   private function validate(array $data): array {
     $errors = [];
 
@@ -17,46 +16,30 @@ class services_controller {
       $errors[] = 'El nombre es obligatorio.';
     }
 
-    if (empty(trim($data['category'] ?? ''))) {
-      $errors[] = 'La categoría es obligatoria.';
+    if (empty(trim($data['role'] ?? ''))) {
+      $errors[] = 'El rol es obligatorio.';
     }
 
-    if (!isset($data['price']) || !is_numeric($data['price']) || (float) $data['price'] <= 0) {
-      $errors[] = 'El precio debe ser un número mayor a 0.';
+    if (isset($data['rating']) && $data['rating'] !== '') {
+      $rating = (float) $data['rating'];
+      if ($rating < 0 || $rating > 5) {
+        $errors[] = 'El rating debe estar entre 0 y 5.';
+      }
     }
 
-    if (empty(trim($data['duration'] ?? ''))) {
-      $errors[] = 'La duración es obligatoria.';
-    }
-
-    if (isset($data['from_of']) && !in_array((string) $data['from_of'], ['0', '1'], true)) {
-      $errors[] = 'El valor de "desde" no es válido.';
-    }
-
-    if (isset($data['popular']) && !in_array((string) $data['popular'], ['0', '1'], true)) {
-      $errors[] = 'El valor de "popular" no es válido.';
+    if (isset($data['display_order']) && !is_numeric($data['display_order'])) {
+      $errors[] = 'El orden debe ser un número.';
     }
 
     return $errors;
   }
 
-  // ── ACTIONS ──
-  public function getAll(): array {
-    return $this->crud->getAll();
+  public function getAllActive(): array {
+    return $this->crud->getAllActive();
   }
 
   public function getAllAdmin(): array {
     return $this->crud->getAllAdmin();
-  }
-
-  public function getById(int $id): array|null {
-    if ($id <= 0) return null;
-    return $this->crud->getById($id);
-  }
-
-  public function getByCategory(string $category): array {
-    if (trim($category) === '') return [];
-    return $this->crud->getByCategory($category);
   }
 
   public function create(array $data): array {
@@ -103,7 +86,7 @@ class services_controller {
       return ['success' => false, 'message' => 'ID inválido.'];
     }
 
-    $ok = $this->crud->hardDelete($id);
+    $ok = $this->crud->delete($id);
     return $ok
       ? ['success' => true]
       : ['success' => false, 'message' => 'Error al eliminar.'];

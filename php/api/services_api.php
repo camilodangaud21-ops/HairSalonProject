@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../controllers/services_controller.php';
+// API: services endpoints
 
 $controller = new services_controller();
 $action     = $_GET['action'] ?? 'all';

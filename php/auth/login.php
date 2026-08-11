@@ -1,4 +1,5 @@
 <?php
+// Auth: login API
 session_start();
 require_once '../config/conection.php';
 require_once '../models/users.php';
