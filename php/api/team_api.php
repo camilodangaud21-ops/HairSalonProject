@@ -1,18 +1,15 @@
 <?php
-// Start the session for authorization state.
-session_start();
-
-// Allow any origin and return JSON for API responses.
-header("Access-Control-Allow-Origin: *");
+// Return JSON responses and allow cross-origin API calls.
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: *");
 
-// Load the services controller for request handling.
-require_once __DIR__ . '/../controllers/services_controller.php';
+// Load the team controller to manage team member data.
+require_once __DIR__ . '/../controllers/team_controller.php';
 
-$controller = new services_controller();
+$controller = new team_controller();
 $action     = $_GET['action'] ?? 'all';
 
-// Require the current user to be an admin for protected actions.
+// Require admin authorization for protected actions.
 function requireAdmin() {
   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     http_response_code(403);
@@ -23,37 +20,25 @@ function requireAdmin() {
 
 switch ($action) {
 
-  // Return all services available to public clients.
+  // Return all active team members for public display.
   case 'all':
-    echo json_encode($controller->getAll());
+    echo json_encode($controller->getAllActive());
     break;
 
-  // Return all services, including inactive ones, for admins.
+  // Return all team members, including inactive ones, for admins.
   case 'allAdmin':
     requireAdmin();
     echo json_encode($controller->getAllAdmin());
     break;
 
-  // Return a single service by its numeric ID.
-  case 'byId':
-    $id = (int) ($_GET['id'] ?? 0);
-    echo json_encode($controller->getById($id));
-    break;
-
-  // Return services filtered by category name.
-  case 'byCategory':
-    $category = $_GET['category'] ?? '';
-    echo json_encode($controller->getByCategory($category));
-    break;
-
-  // Create a new service using JSON request payload.
+  // Create a new team member record.
   case 'create':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
     echo json_encode($controller->create($data));
     break;
 
-  // Update an existing service by ID.
+  // Update an existing team member by ID.
   case 'update':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
@@ -61,7 +46,7 @@ switch ($action) {
     echo json_encode($controller->update($id, $data));
     break;
 
-  // Toggle the active flag for a service.
+  // Toggle whether a team member is active.
   case 'toggleActive':
     requireAdmin();
     $data   = json_decode(file_get_contents('php://input'), true);
@@ -70,14 +55,14 @@ switch ($action) {
     echo json_encode($controller->toggleActive($id, $active));
     break;
 
-  // Delete a service by ID.
+  // Delete a team member entry by ID.
   case 'delete':
     requireAdmin();
     $id = (int) ($_GET['id'] ?? 0);
     echo json_encode($controller->delete($id));
     break;
 
-  // Respond with an error for invalid actions.
+  // Respond with an error for unsupported actions.
   default:
     echo json_encode(['error' => 'Acción no válida']);
     break;

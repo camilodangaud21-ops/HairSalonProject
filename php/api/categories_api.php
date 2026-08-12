@@ -1,18 +1,18 @@
 <?php
-// Start the session for authorization state.
+// Start or resume the session for authorization checks.
 session_start();
 
-// Allow any origin and return JSON for API responses.
+// Allow requests from any origin and return JSON responses.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-// Load the services controller for request handling.
-require_once __DIR__ . '/../controllers/services_controller.php';
+// Load the categories controller to handle business logic.
+require_once __DIR__ . '/../controllers/categories_controller.php';
 
-$controller = new services_controller();
+$controller = new categories_controller();
 $action     = $_GET['action'] ?? 'all';
 
-// Require the current user to be an admin for protected actions.
+// Ensure the current user is an administrator before allowing protected actions.
 function requireAdmin() {
   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     http_response_code(403);
@@ -23,37 +23,25 @@ function requireAdmin() {
 
 switch ($action) {
 
-  // Return all services available to public clients.
+  // Return all active categories for public use.
   case 'all':
-    echo json_encode($controller->getAll());
+    echo json_encode($controller->getAllActive());
     break;
 
-  // Return all services, including inactive ones, for admins.
+  // Return all categories, including inactive ones, only for admin users.
   case 'allAdmin':
     requireAdmin();
     echo json_encode($controller->getAllAdmin());
     break;
 
-  // Return a single service by its numeric ID.
-  case 'byId':
-    $id = (int) ($_GET['id'] ?? 0);
-    echo json_encode($controller->getById($id));
-    break;
-
-  // Return services filtered by category name.
-  case 'byCategory':
-    $category = $_GET['category'] ?? '';
-    echo json_encode($controller->getByCategory($category));
-    break;
-
-  // Create a new service using JSON request payload.
+  // Create a new category from JSON request data.
   case 'create':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
     echo json_encode($controller->create($data));
     break;
 
-  // Update an existing service by ID.
+  // Update an existing category by ID with JSON request data.
   case 'update':
     requireAdmin();
     $data = json_decode(file_get_contents('php://input'), true);
@@ -61,7 +49,7 @@ switch ($action) {
     echo json_encode($controller->update($id, $data));
     break;
 
-  // Toggle the active flag for a service.
+  // Toggle the active state of a category by ID.
   case 'toggleActive':
     requireAdmin();
     $data   = json_decode(file_get_contents('php://input'), true);
@@ -70,14 +58,14 @@ switch ($action) {
     echo json_encode($controller->toggleActive($id, $active));
     break;
 
-  // Delete a service by ID.
+  // Delete a category by ID.
   case 'delete':
     requireAdmin();
     $id = (int) ($_GET['id'] ?? 0);
     echo json_encode($controller->delete($id));
     break;
 
-  // Respond with an error for invalid actions.
+  // Handle unsupported action requests.
   default:
     echo json_encode(['error' => 'Acción no válida']);
     break;

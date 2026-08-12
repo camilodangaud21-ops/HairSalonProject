@@ -32,12 +32,13 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 <!-- ADMIN TABS -->
 <div class="tabs">
   <div class="tab active" data-admintab="servicios">Servicios</div>
+  <div class="tab" data-admintab="equipo">Equipo</div>
   <div class="tab" data-admintab="configuracion">Configuración</div>
 </div>
 
 <main class="admin-main">
 
-  <!-- ── PANEL SERVICIOS ── -->
+  <!-- ── SERVICES PANEL ── -->
   <div class="admin-panel active" id="admin-panel-servicios">
     <section class="admin-toolbar">
       <h2>Servicios</h2>
@@ -60,7 +61,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     </table>
   </div>
 
-  <!-- ── PANEL CONFIGURACIÓN ── -->
+  <!-- ── SETTINGS PANEL ── -->
   <div class="admin-panel" id="admin-panel-configuracion">
     <section class="admin-toolbar">
       <h2>Configuración del sitio</h2>
@@ -90,6 +91,27 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
       <button onclick="saveSettings()" class="btn-reservar" style="padding:10px 24px;">Guardar cambios</button>
       <p id="settings-message" style="display:none; margin-top:10px;"></p>
     </div>
+  </div>
+    <!-- ── TEAM PANEL ── -->
+  <div class="admin-panel" id="admin-panel-equipo">
+    <section class="admin-toolbar">
+      <h2>Equipo</h2>
+      <button class="btn-reservar" onclick="openTeamForm()">+ Nuevo miembro</button>
+    </section>
+
+    <table class="admin-table" id="team-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Rol</th>
+          <th>Rating</th>
+          <th>Orden</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="team-tbody"></tbody>
+    </table>
   </div>
 
 </main>

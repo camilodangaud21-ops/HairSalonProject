@@ -2,7 +2,9 @@
 session_start();
 // Public homepage: renders site with settings
 require_once 'php/controllers/settings_controller.php';
-
+require_once 'php/controllers/team_controller.php';
+$teamController = new team_controller();
+$teamMembers = $teamController->getAllActive();
 $settingsController = new settings_controller();
 $settings = $settingsController->getAllAsMap();
 ?>
@@ -64,7 +66,7 @@ $settings = $settingsController->getAllAsMap();
   <div class="tab" data-tab="resenas">Reseñas</div>
 </div>
 
-<!-- ── PANEL SERVICIOS ── -->
+<!-- ── SERVICES PANEL ── -->
 <div class="panel active" id="panel-servicios">
 
   <!-- About -->
@@ -102,7 +104,7 @@ $settings = $settingsController->getAllAsMap();
   <!-- Search -->
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input type="text" id="search-input" placeholder="Buscar servicios..."/>
+    <input type="text" id="search-input" name="service-search" placeholder="Buscar servicios..." autocomplete="off"/>
   </div>
 
   <!-- Category filter -->
@@ -121,31 +123,27 @@ $settings = $settingsController->getAllAsMap();
 
 </div>
 
-<!-- ── PANEL EQUIPO ── -->
+<!-- ── TEAM PANEL ── -->
 <div class="panel" id="panel-equipo">
   <div class="equipo-grid">
-    <div class="estilista-card">
-      <div class="estilista-avatar-ph">💇</div>
-      <div class="estilista-name">Isabel Argote</div>
-      <div class="estilista-role">Estilista</div>
-      <div class="estilista-stars">★★★★★ 5.0</div>
-    </div>
-    <div class="estilista-card">
-      <div class="estilista-avatar-ph">💇</div>
-      <div class="estilista-name">Camila Ramírez Peña</div>
-      <div class="estilista-role">Estilista</div>
-      <div class="estilista-stars">★★★★ —</div>
-    </div>
-    <div class="estilista-card">
-      <div class="estilista-avatar-ph">💇</div>
-      <div class="estilista-name">Dailis Martínez</div>
-      <div class="estilista-role">Estilista</div>
-      <div class="estilista-stars">★★★★ 3.7</div>
-    </div>
+    <?php foreach ($teamMembers as $member): ?>
+      <div class="estilista-card">
+        <?php if (!empty($member['photo'])): ?>
+          <img class="estilista-avatar" src="<?= htmlspecialchars($member['photo']) ?>" alt="<?= htmlspecialchars($member['name']) ?>" />
+        <?php else: ?>
+          <div class="estilista-avatar-ph">💇</div>
+        <?php endif; ?>
+        <div class="estilista-name"><?= htmlspecialchars($member['name']) ?></div>
+        <div class="estilista-role"><?= htmlspecialchars($member['role']) ?></div>
+        <div class="estilista-stars">
+          <?= $member['rating'] !== null ? '★★★★★ ' . htmlspecialchars($member['rating']) : '★★★★ —' ?>
+        </div>
+      </div>
+    <?php endforeach; ?>
   </div>
 </div>
 
-<!-- ── PANEL RESEÑAS ── -->
+<!-- ── REVIEWS PANEL ── -->
 <div class="panel" id="panel-resenas">
   <div class="rating-summary">
     <div class="rating-big">
