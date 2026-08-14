@@ -1,8 +1,5 @@
 <?php
-// Start the session for authorization checks.
 session_start();
-
-// Allow cross-origin requests and force JSON output.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
@@ -22,7 +19,6 @@ function requireAdmin() {
 }
 
 switch ($action) {
-
   // Return all application settings, admin-only.
   case 'all':
     requireAdmin();

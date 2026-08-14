@@ -1,13 +1,15 @@
 <?php
 require_once __DIR__ . '/../config/categories_crud.php';
+// Controller: categories operations
 
 class categories_controller {
   private $crud;
 
   public function __construct() {
-    $this->crud = new categories_crud();
+    $this->crud = new category_crud();
   }
 
+  // ── VALIDATION ──
   private function validate(array $data, ?int $excludeId = null): array {
     $errors = [];
 
@@ -38,6 +40,7 @@ class categories_controller {
     return $errors;
   }
 
+  // ── ACTIONS ──
   public function getAllActive(): array {
     return $this->crud->getAllActive();
   }

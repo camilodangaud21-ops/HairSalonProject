@@ -1,13 +1,11 @@
 <?php
-// Start or resume the session for authorization checks.
 session_start();
-
-// Allow requests from any origin and return JSON responses.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 // Load the categories controller to handle business logic.
 require_once __DIR__ . '/../controllers/categories_controller.php';
+
 
 $controller = new categories_controller();
 $action     = $_GET['action'] ?? 'all';

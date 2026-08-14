@@ -1,5 +1,5 @@
 <?php
-// Return JSON responses and allow cross-origin API calls.
+session_start();
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 

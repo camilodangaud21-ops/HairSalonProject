@@ -1,8 +1,5 @@
 <?php
-// Start the session for authorization state.
 session_start();
-
-// Allow any origin and return JSON for API responses.
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 

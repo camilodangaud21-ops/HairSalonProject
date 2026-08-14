@@ -33,6 +33,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 <div class="tabs">
   <div class="tab active" data-admintab="servicios">Servicios</div>
   <div class="tab" data-admintab="equipo">Equipo</div>
+  <div class="tab" data-admintab="categorias">Categorías</div>
   <div class="tab" data-admintab="configuracion">Configuración</div>
 </div>
 
@@ -58,6 +59,28 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
         </tr>
       </thead>
       <tbody id="services-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── PANEL CATEGORÍAS ── -->
+  <div class="admin-panel" id="admin-panel-categorias">
+    <section class="admin-toolbar">
+      <h2>Categorías</h2>
+      <button class="btn-reservar" onclick="openCategoryForm()">+ Nueva categoría</button>
+    </section>
+
+    <table class="admin-table" id="categories-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Etiqueta</th>
+          <th>Clase CSS</th>
+          <th>Orden</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="categories-tbody"></tbody>
     </table>
   </div>
 
@@ -146,6 +169,26 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   </div>
 </div>
 
-<script src="/peluqueria/admin/js/admin.js"></script>
+<!-- FORM MODAL (categorías) -->
+<div id="category-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 class="modal-title" id="category-modal-title">Nueva categoría</h2>
+    <input type="hidden" id="category-id" />
+    <input class="modal-input" id="category-name" placeholder="Nombre (ej: Peluquería)" />
+    <input class="modal-input" id="category-label" placeholder="Etiqueta visible (ej: PELUQUERÍA)" />
+    <input class="modal-input" id="category-css-class" placeholder="Clase CSS (ej: cat-pelq)" />
+    <input class="modal-input" id="category-display-order" type="number" placeholder="Orden de aparición" />
+
+    <button onclick="saveCategory()" class="btn-reservar" style="width:100%; padding:10px;">Guardar</button>
+    <p id="category-error" class="modal-error" style="display:none;"></p>
+    <button onclick="closeCategoryForm()" class="modal-cancel">Cancelar</button>
+  </div>
+</div>
+<script src="/peluqueria/admin/js/admin_settings.js"></script>
+<script src="/peluqueria/admin/js/admin_services.js"></script>
+<script src="/peluqueria/admin/js/admin_team.js"></script>
+<script src="/peluqueria/admin/js/admin_categories.js"></script>
+<script src="/peluqueria/admin/js/admin_core.js"></script><
+
 </body>
 </html>

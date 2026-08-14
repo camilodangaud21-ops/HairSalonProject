@@ -211,6 +211,12 @@ $settings = $settingsController->getAllAsMap();
 <script>
   const SITE_WHATSAPP = <?= json_encode($settings['whatsapp_number'] ?? '573000000000') ?>;
 </script>
-<script src="js/ui.js"></script>
+
+<script src="js/login.js"></script>
+<script src="js/categories.js"></script>
+<script src="js/services.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/main.js"></script>
+
 </body>
 </html>
