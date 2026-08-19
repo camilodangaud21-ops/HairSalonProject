@@ -184,11 +184,27 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     <button onclick="closeCategoryForm()" class="modal-cancel">Cancelar</button>
   </div>
 </div>
+<!-- FORM MODAL (equipo) -->
+<div id="team-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 class="modal-title" id="team-modal-title">Nuevo miembro</h2>
+    <input type="hidden" id="team-id" />
+    <input class="modal-input" id="team-name" placeholder="Nombre completo" />
+    <input class="modal-input" id="team-role" placeholder="Rol (ej: Estilista)" />
+    <input class="modal-input" id="team-rating" type="number" step="0.1" min="0" max="5" placeholder="Rating (ej: 4.5)" />
+    <input class="modal-input" id="team-photo" placeholder="URL de foto (opcional)" />
+    <input class="modal-input" id="team-display-order" type="number" placeholder="Orden de aparición" />
+    <button onclick="saveTeamMember()" class="btn-reservar" style="width:100%; padding:10px;">Guardar</button>
+    <p id="team-error" class="modal-error" style="display:none;"></p>
+    <button onclick="closeTeamForm()" class="modal-cancel">Cancelar</button>
+  </div>
+</div>
+
 <script src="/peluqueria/admin/js/admin_settings.js"></script>
 <script src="/peluqueria/admin/js/admin_services.js"></script>
 <script src="/peluqueria/admin/js/admin_team.js"></script>
 <script src="/peluqueria/admin/js/admin_categories.js"></script>
-<script src="/peluqueria/admin/js/admin_core.js"></script><
+<script src="/peluqueria/admin/js/admin_core.js"></script>
 
 </body>
 </html>

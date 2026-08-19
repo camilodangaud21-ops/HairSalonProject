@@ -56,12 +56,12 @@ function openCategoryForm() {
   document.getElementById("category-label").value = "";
   document.getElementById("category-css-class").value = "";
   document.getElementById("category-display-order").value = "0";
-  document.getElementById("category-error").style.display = "none";
-  document.getElementById("category-modal").style.display = "flex";
+  document.getElementById("category-error").classList.remove("active");
+  document.getElementById("category-modal").classList.add("active");
 }
 
 function closeCategoryForm() {
-  document.getElementById("category-modal").style.display = "none";
+  document.getElementById("category-modal").classList.remove("active");
 }
 
 function editCategory(id) {
@@ -74,8 +74,8 @@ function editCategory(id) {
   document.getElementById("category-label").value = c.label;
   document.getElementById("category-css-class").value = c.css_class;
   document.getElementById("category-display-order").value = c.display_order;
-  document.getElementById("category-error").style.display = "none";
-  document.getElementById("category-modal").style.display = "flex";
+  document.getElementById("category-error").classList.remove("active");
+  document.getElementById("category-modal").classList.add("active");
 }
 
 async function saveCategory() {

@@ -108,14 +108,7 @@ $settings = $settingsController->getAllAsMap();
   </div>
 
   <!-- Category filter -->
-  <div class="cat-scroll">
-    <button class="cat-btn active" data-cat="todos">Todos los servicios <span class="cat-count">43</span></button>
-    <button class="cat-btn" data-cat="Peluquería">Peluquería</button>
-    <button class="cat-btn" data-cat="Manicure y pedicure">Manicure y pedicure</button>
-    <button class="cat-btn" data-cat="Maquillaje">Maquillaje</button>
-    <button class="cat-btn" data-cat="Spa">Spa</button>
-    <button class="cat-btn" data-cat="Depilación">Depilación</button>
-  </div>
+  <div class="cat-scroll"></div>
 
   <!-- Services grid -->
   <div class="services-grid" id="services-grid"></div>

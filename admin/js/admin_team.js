@@ -43,12 +43,12 @@ function openTeamForm() {
   document.getElementById("team-rating").value = "";
   document.getElementById("team-photo").value = "";
   document.getElementById("team-display-order").value = "0";
-  document.getElementById("team-error").style.display = "none";
-  document.getElementById("team-modal").style.display = "flex";
+  document.getElementById("team-error").classList.remove("active");
+  document.getElementById("team-modal").classList.add("active");
 }
 
 function closeTeamForm() {
-  document.getElementById("team-modal").style.display = "none";
+  document.getElementById("team-modal").classList.remove("active");
 }
 
 function editTeamMember(id) {
@@ -62,8 +62,8 @@ function editTeamMember(id) {
   document.getElementById("team-rating").value = m.rating ?? "";
   document.getElementById("team-photo").value = m.photo ?? "";
   document.getElementById("team-display-order").value = m.display_order;
-  document.getElementById("team-error").style.display = "none";
-  document.getElementById("team-modal").style.display = "flex";
+  document.getElementById("team-error").classList.remove("active");
+  document.getElementById("team-modal").classList.add("active");
 }
 
 async function saveTeamMember() {

@@ -4,11 +4,11 @@
    ══════════════════════════════════════════ */
 
 function openLogin() {
-  document.getElementById("login-modal").style.display = "flex";
+  document.getElementById("login-modal").classList.add("active");
 }
 
 function closeLogin() {
-  document.getElementById("login-modal").style.display = "none";
+  document.getElementById("login-modal").classList.remove("active");
 }
 
 async function submitLogin() {

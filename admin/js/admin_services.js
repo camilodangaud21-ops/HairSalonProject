@@ -65,12 +65,12 @@ function openServiceForm() {
   document.getElementById("service-popular").checked = false;
   document.getElementById("service-description").value = "";
   document.getElementById("service-image").value = "";
-  document.getElementById("service-error").style.display = "none";
-  document.getElementById("service-modal").style.display = "flex";
+  document.getElementById("service-error").classList.remove("active");
+  document.getElementById("service-modal").classList.add("active");
 }
 
 function closeServiceForm() {
-  document.getElementById("service-modal").style.display = "none";
+  document.getElementById("service-modal").classList.remove("active");
 }
 
 function editService(id) {
@@ -88,8 +88,8 @@ function editService(id) {
   document.getElementById("service-popular").checked = s.popular == 1;
   document.getElementById("service-description").value = s.description || "";
   document.getElementById("service-image").value = s.image || "";
-  document.getElementById("service-error").style.display = "none";
-  document.getElementById("service-modal").style.display = "flex";
+  document.getElementById("service-error").classList.remove("active");
+  document.getElementById("service-modal").classList.add("active");
 }
 
 async function saveService() {
