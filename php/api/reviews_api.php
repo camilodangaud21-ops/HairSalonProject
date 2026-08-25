@@ -6,7 +6,7 @@ header("Content-Type: application/json");
 require_once __DIR__ . '/../controllers/reviews_controller.php';
 
 $controller = new reviews_controller();
-$action     = $_GET['action'] ?? 'all';
+$action     = $_GET['action'] ?? 'featured';
 
 function requireAdmin() {
   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
@@ -15,7 +15,6 @@ function requireAdmin() {
     exit;
   }
 }
-
 function requireLogin() {
   if (!isset($_SESSION['user'])) {
     http_response_code(401);
@@ -26,35 +25,47 @@ function requireLogin() {
 
 switch ($action) {
 
-  // Public: all active reviews + average
-  case 'all':
-    echo json_encode($controller->getAll());
+  case 'featured':
+    echo json_encode($controller->getFeatured());
     break;
 
-  case 'average':
-    echo json_encode($controller->getAverageRating());
+  case 'summary':
+    echo json_encode($controller->getSummary());
     break;
 
-  // Client: create review (must be logged in)
-  case 'create':
-    requireLogin();
-    $data = json_decode(file_get_contents('php://input'), true);
-    $data['author_name'] = $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
-    echo json_encode($controller->create($data));
-    break;
-
-  // Admin only
   case 'allAdmin':
     requireAdmin();
     echo json_encode($controller->getAllAdmin());
     break;
 
-  case 'feature':
+  case 'create':
+    requireLogin();
+    $data = json_decode(file_get_contents('php://input'), true);
+    $data['author_name'] = $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
+    echo json_encode($controller->create($data));
+  break;
+
+  case 'update':
     requireAdmin();
-    $id    = (int) ($_GET['id'] ?? 0);
-    $data  = json_decode(file_get_contents('php://input'), true);
-    $value = (bool) ($data['featured'] ?? false);
-    echo json_encode($controller->feature($id, $value));
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id   = (int) ($_GET['id'] ?? 0);
+    echo json_encode($controller->update($id, $data));
+    break;
+
+  case 'toggleFeatured':
+    requireAdmin();
+    $data     = json_decode(file_get_contents('php://input'), true);
+    $id       = (int) ($_GET['id'] ?? 0);
+    $featured = (bool) ($data['featured'] ?? false);
+    echo json_encode($controller->toggleFeatured($id, $featured));
+    break;
+
+  case 'toggleActive':
+    requireAdmin();
+    $data   = json_decode(file_get_contents('php://input'), true);
+    $id     = (int) ($_GET['id'] ?? 0);
+    $active = (bool) ($data['active'] ?? false);
+    echo json_encode($controller->toggleActive($id, $active));
     break;
 
   case 'delete':

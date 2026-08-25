@@ -34,6 +34,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   <div class="tab active" data-admintab="servicios">Servicios</div>
   <div class="tab" data-admintab="equipo">Equipo</div>
   <div class="tab" data-admintab="categorias">Categorías</div>
+  <div class="tab" data-admintab="resenas">Reseñas</div>
   <div class="tab" data-admintab="configuracion">Configuración</div>
 </div>
 
@@ -115,7 +116,8 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
       <p id="settings-message" style="display:none; margin-top:10px;"></p>
     </div>
   </div>
-    <!-- ── TEAM PANEL ── -->
+
+  <!-- ── TEAM PANEL ── -->
   <div class="admin-panel" id="admin-panel-equipo">
     <section class="admin-toolbar">
       <h2>Equipo</h2>
@@ -134,6 +136,29 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
         </tr>
       </thead>
       <tbody id="team-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ── REVIEWS PANEL ── -->
+  <div class="admin-panel" id="admin-panel-resenas">
+    <section class="admin-toolbar">
+      <h2>Reseñas</h2>
+      <button class="btn-reservar" onclick="openReviewForm()">+ Nueva reseña</button>
+    </section>
+
+    <table class="admin-table" id="reviews-table">
+      <thead>
+        <tr>
+          <th>Autor</th>
+          <th>Calificación</th>
+          <th>Comentario</th>
+          <th>Destacada</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="reviews-tbody"></tbody>
     </table>
   </div>
 
@@ -184,6 +209,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     <button onclick="closeCategoryForm()" class="modal-cancel">Cancelar</button>
   </div>
 </div>
+
 <!-- FORM MODAL (equipo) -->
 <div id="team-modal" class="modal-overlay">
   <div class="modal-box">
@@ -200,10 +226,34 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   </div>
 </div>
 
+<!-- FORM MODAL (reseñas) -->
+<div id="review-modal" class="modal-overlay">
+  <div class="modal-box">
+    <input type="hidden" id="review-id" />
+    <input class="modal-input" id="review-author" placeholder="Nombre del cliente" />
+    <select class="modal-input" id="review-rating">
+      <option value="5">5 estrellas</option>
+      <option value="4">4 estrellas</option>
+      <option value="3">3 estrellas</option>
+      <option value="2">2 estrellas</option>
+      <option value="1">1 estrella</option>
+    </select>
+    <textarea class="modal-input" id="review-comment" placeholder="Comentario del cliente"></textarea>
+    <label class="modal-checkbox">
+      <input type="checkbox" id="review-featured" /> Destacar en la página principal
+    </label>
+
+    <button onclick="saveReview()" class="btn-reservar" style="width:100%; padding:10px;">Guardar</button>
+    <p id="review-error" class="modal-error" style="display:none;"></p>
+    <button onclick="closeReviewForm()" class="modal-cancel">Cancelar</button>
+  </div>
+</div>
+
 <script src="/peluqueria/admin/js/admin_settings.js"></script>
 <script src="/peluqueria/admin/js/admin_services.js"></script>
 <script src="/peluqueria/admin/js/admin_team.js"></script>
 <script src="/peluqueria/admin/js/admin_categories.js"></script>
+<script src="/peluqueria/admin/js/admin_reviews.js"></script>
 <script src="/peluqueria/admin/js/admin_core.js"></script>
 
 </body>

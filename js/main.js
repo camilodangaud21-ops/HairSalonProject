@@ -17,4 +17,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   loadCategories().then(loadServices);
+  loadReviews();
 });

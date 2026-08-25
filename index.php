@@ -140,22 +140,38 @@ $settings = $settingsController->getAllAsMap();
 <div class="panel" id="panel-resenas">
   <div class="rating-summary">
     <div class="rating-big">
-      <div class="num">4.3</div>
+      <div class="num">—</div>
       <div class="star-big">★</div>
-      <div class="count">6 reseñas</div>
+      <div class="count">cargando...</div>
     </div>
     <div class="rating-bars">
-      <div class="bar-row"><span class="lbl">5</span><div class="bar-track"><div class="bar-fill" style="width:83%"></div></div><span class="bar-num">5</span></div>
+      <div class="bar-row"><span class="lbl">5</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-num">0</span></div>
       <div class="bar-row"><span class="lbl">4</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-num">0</span></div>
       <div class="bar-row"><span class="lbl">3</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-num">0</span></div>
       <div class="bar-row"><span class="lbl">2</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-num">0</span></div>
-      <div class="bar-row"><span class="lbl">1</span><div class="bar-track"><div class="bar-fill" style="width:17%"></div></div><span class="bar-num">1</span></div>
+      <div class="bar-row"><span class="lbl">1</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-num">0</span></div>
     </div>
   </div>
 
-  <div id="resenas-list">
-
+  <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'client'): ?>
+  <div class="review-form" style="margin:16px 0;">
+    <h3 style="color:var(--gold); font-size:.9rem; margin-bottom:10px;">Deja tu reseña</h3>
+    <div id="review-stars" style="font-size:1.5rem; cursor:pointer; margin-bottom:8px;">
+      <span data-val="1">☆</span>
+      <span data-val="2">☆</span>
+      <span data-val="3">☆</span>
+      <span data-val="4">☆</span>
+      <span data-val="5">☆</span>
+    </div>
+    <input type="hidden" id="review-rating" value="0" />
+    <textarea class="modal-input" id="review-comment" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
+    <button onclick="submitReview()" class="btn-reservar" style="margin-top:8px; padding:8px 20px;">Enviar reseña</button>
+    <p id="review-message" style="display:none; font-size:.8rem; margin-top:6px;"></p>
   </div>
+  <?php endif; ?>
+
+  <div id="resenas-list"></div>
+</div>
 </div>
 
 <!-- FOOTER -->
@@ -210,6 +226,7 @@ $settings = $settingsController->getAllAsMap();
 <script src="js/services.js"></script>
 <script src="js/tabs.js"></script>
 <script src="js/main.js"></script>
+<script src="js/reviews.js"></script>
 
 </body>
 </html>

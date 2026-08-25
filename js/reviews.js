@@ -8,29 +8,29 @@ const REVIEWS_API = "/peluqueria/php/api/reviews_api.php";
 
 async function loadReviews() {
   try {
-    const [reviewsRes, avgRes] = await Promise.all([
-      fetch(`${REVIEWS_API}?action=all`),
-      fetch(`${REVIEWS_API}?action=average`)
+    const [reviewsRes, summaryRes] = await Promise.all([
+      fetch(`${REVIEWS_API}?action=featured`),
+      fetch(`${REVIEWS_API}?action=summary`)
     ]);
 
     const reviews = await reviewsRes.json();
-    const avg     = await avgRes.json();
+    const summary = await summaryRes.json();
 
-    renderRatingSummary(avg);
+    renderRatingSummary(summary);
     renderReviews(reviews);
   } catch (error) {
     console.error("Error loading reviews:", error);
   }
 }
 
-function renderRatingSummary(avg) {
-  if (!avg || !avg.total) return;
+function renderRatingSummary(summary) {
+  if (!summary) return;
 
-  document.querySelector(".rating-big .num").textContent  = avg.average ?? "—";
-  document.querySelector(".rating-big .count").textContent = `${avg.total} reseñas`;
+  document.querySelector(".rating-big .num").textContent   = summary.count > 0 ? summary.average : "—";
+  document.querySelector(".rating-big .count").textContent = `${summary.count} reseñas`;
 
-  const total = avg.total || 1;
-  const bars  = [avg.five, avg.four, avg.three, avg.two, avg.one];
+  const total = summary.count || 1;
+  const bars  = [summary.stars[5], summary.stars[4], summary.stars[3], summary.stars[2], summary.stars[1]];
 
   document.querySelectorAll(".bar-fill").forEach((bar, i) => {
     bar.style.width = Math.round((bars[i] / total) * 100) + "%";
@@ -67,4 +67,75 @@ function formatDate(dateStr) {
   if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleDateString("es-CO", { year: "numeric", month: "long", day: "numeric" });
+}
+
+// ── SUBMIT REVIEW ──
+let selectedRating = 0;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const stars = document.querySelectorAll("#review-stars span");
+  if (!stars.length) return;
+
+  stars.forEach(star => {
+    star.addEventListener("mouseover", () => {
+      const val = +star.dataset.val;
+      stars.forEach(s => s.textContent = +s.dataset.val <= val ? "★" : "☆");
+    });
+
+    star.addEventListener("mouseout", () => {
+      stars.forEach(s => s.textContent = +s.dataset.val <= selectedRating ? "★" : "☆");
+    });
+
+    star.addEventListener("click", () => {
+      selectedRating = +star.dataset.val;
+      document.getElementById("review-rating").value = selectedRating;
+    });
+  });
+});
+
+async function submitReview() {
+  const messageEl = document.getElementById("review-message");
+  const rating    = document.getElementById("review-rating").value;
+  const comment   = document.getElementById("review-comment").value.trim();
+
+  if (!rating || rating == 0) {
+    messageEl.style.color   = "#e55";
+    messageEl.style.display = "block";
+    messageEl.textContent   = "Selecciona una calificación.";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${REVIEWS_API}?action=create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rating, comment }),
+    });
+
+    if (res.status === 401) {
+      messageEl.style.color   = "#e55";
+      messageEl.style.display = "block";
+      messageEl.textContent   = "Tu sesión expiró. Inicia sesión de nuevo.";
+      return;
+    }
+
+    const data = await res.json();
+    messageEl.style.display = "block";
+
+    if (data.success) {
+      messageEl.style.color = "var(--gold)";
+      messageEl.textContent = "¡Gracias por tu reseña!";
+      document.getElementById("review-comment").value = "";
+      selectedRating = 0;
+      document.querySelectorAll("#review-stars span").forEach(s => s.textContent = "☆");
+      loadReviews();
+    } else {
+      messageEl.style.color = "#e55";
+      messageEl.textContent = data.message || "No se pudo enviar la reseña.";
+    }
+  } catch (err) {
+    messageEl.style.color   = "#e55";
+    messageEl.style.display = "block";
+    messageEl.textContent   = "Error de conexión, intenta de nuevo.";
+  }
 }
