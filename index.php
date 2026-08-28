@@ -23,7 +23,7 @@ $settings = $settingsController->getAllAsMap();
 
 <!-- HERO -->
 <div class="hero">
-  <img class="hero-bg" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80" alt="Isabel Rojas Beauty Salón" />
+  <img class="hero-bg" src="<?= htmlspecialchars(!empty($settings['hero_image']) ? $settings['hero_image'] : 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80') ?>" alt="Isabel Rojas Beauty Salón" />
   <div class="hero-overlay"></div>
 </div>
 
@@ -94,9 +94,9 @@ $settings = $settingsController->getAllAsMap();
         <span><?= htmlspecialchars($settings['schedule_today'] ?? '') ?></span>
       </div>
       <div class="portfolio-grid">
-        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&q=70" alt="foto 1"/>
-        <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=200&q=70" alt="foto 2"/>
-        <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=200&q=70" alt="foto 3"/>
+        <img src="<?= htmlspecialchars(!empty($settings['portfolio_image_1']) ? $settings['portfolio_image_1'] : 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&q=70') ?>" alt="foto 1"/>
+        <img src="<?= htmlspecialchars(!empty($settings['portfolio_image_2']) ? $settings['portfolio_image_2'] : 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=200&q=70') ?>" alt="foto 2"/>
+        <img src="<?= htmlspecialchars(!empty($settings['portfolio_image_3']) ? $settings['portfolio_image_3'] : 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=200&q=70') ?>" alt="foto 3"/>
       </div>
     </div>
   </div>
@@ -171,7 +171,6 @@ $settings = $settingsController->getAllAsMap();
   <?php endif; ?>
 
   <div id="resenas-list"></div>
-</div>
 </div>
 
 <!-- FOOTER -->

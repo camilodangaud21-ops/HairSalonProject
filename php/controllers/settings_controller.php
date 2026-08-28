@@ -11,6 +11,18 @@ class settings_controller {
     'about_us_text',
     'schedule_today',
     'address',
+    'hero_image',
+    'portfolio_image_1',
+    'portfolio_image_2',
+    'portfolio_image_3',
+  ];
+
+  // these must always have a value; image keys may be sent empty (they fall back to a default)
+  private const REQUIRED_KEYS = [
+    'whatsapp_number',
+    'about_us_text',
+    'schedule_today',
+    'address',
   ];
 
   public function __construct() {
@@ -32,7 +44,7 @@ class settings_controller {
         continue;
       }
 
-      if (trim((string) $value) === '') {
+      if (in_array($key, self::REQUIRED_KEYS, true) && trim((string) $value) === '') {
         $errors[] = "El campo '$key' no puede estar vacío.";
       }
     }

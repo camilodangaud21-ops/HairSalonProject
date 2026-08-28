@@ -112,6 +112,30 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
         <input class="modal-input" id="setting-address" placeholder="Dirección completa" />
       </label>
 
+      <label class="settings-label">
+        Imagen del banner principal (hero)
+        <input type="file" id="hero-image-file" accept="image/jpeg,image/png,image/webp" />
+        <img id="hero-image-preview" style="max-width:200px; margin-top:8px; display:none; border-radius:6px;" />
+      </label>
+
+      <label class="settings-label">
+        Foto 1 (galería "Sobre nosotros")
+        <input type="file" id="portfolio-1-file" accept="image/jpeg,image/png,image/webp" />
+        <img id="portfolio-1-preview" style="max-width:150px; margin-top:8px; display:none; border-radius:6px;" />
+      </label>
+
+      <label class="settings-label">
+        Foto 2 (galería "Sobre nosotros")
+        <input type="file" id="portfolio-2-file" accept="image/jpeg,image/png,image/webp" />
+        <img id="portfolio-2-preview" style="max-width:150px; margin-top:8px; display:none; border-radius:6px;" />
+      </label>
+
+      <label class="settings-label">
+        Foto 3 (galería "Sobre nosotros")
+        <input type="file" id="portfolio-3-file" accept="image/jpeg,image/png,image/webp" />
+        <img id="portfolio-3-preview" style="max-width:150px; margin-top:8px; display:none; border-radius:6px;" />
+      </label>
+
       <button onclick="saveSettings()" class="btn-reservar" style="padding:10px 24px;">Guardar cambios</button>
       <p id="settings-message" style="display:none; margin-top:10px;"></p>
     </div>
@@ -169,7 +193,9 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   <div class="modal-box">
     <h2 class="modal-title" id="service-modal-title">Nuevo servicio</h2>
     <input type="hidden" id="service-id" />
+
     <input class="modal-input" id="service-name" placeholder="Nombre del servicio" />
+
     <select class="modal-input" id="service-category">
       <option value="Peluquería">Peluquería</option>
       <option value="Manicure y pedicure">Manicure y pedicure</option>
@@ -177,16 +203,29 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
       <option value="Spa">Spa</option>
       <option value="Depilación">Depilación</option>
     </select>
+
     <input class="modal-input" id="service-price" type="number" placeholder="Precio" />
+
     <label class="modal-checkbox">
       <input type="checkbox" id="service-from-of" /> Precio "a partir de"
     </label>
+
     <input class="modal-input" id="service-duration" placeholder="Duración (ej: 45 min)" />
+
     <label class="modal-checkbox">
       <input type="checkbox" id="service-popular" /> Marcar como popular
     </label>
+
     <textarea class="modal-input" id="service-description" placeholder="Descripción"></textarea>
-    <input class="modal-input" id="service-image" placeholder="URL de imagen (opcional)" />
+
+    <!-- Service image upload -->
+    <label class="settings-label" style="margin-top:8px;">
+      Service image
+      <input type="file" id="service-image-file" accept="image/jpeg,image/png,image/webp" />
+      <img id="service-image-preview" style="max-width:150px; margin-top:8px; display:none; border-radius:6px;" />
+    </label>
+    <!-- Stores the resulting path after upload -->
+    <input type="hidden" id="service-image" />
 
     <button onclick="saveService()" class="btn-reservar" style="width:100%; padding:10px;">Guardar</button>
     <p id="service-error" class="modal-error" style="display:none;"></p>
@@ -229,6 +268,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 <!-- FORM MODAL (reseñas) -->
 <div id="review-modal" class="modal-overlay">
   <div class="modal-box">
+    <h2 class="modal-title" id="review-modal-title">Nueva reseña</h2>
     <input type="hidden" id="review-id" />
     <input class="modal-input" id="review-author" placeholder="Nombre del cliente" />
     <select class="modal-input" id="review-rating">

@@ -5,6 +5,8 @@
    ══════════════════════════════════════════ */
 
 const SETTINGS_API = "/peluqueria/php/api/settings_api.php";
+const SITE_BASE    = "/peluqueria/";
+const UPLOAD_API   = "/peluqueria/php/api/upload_api.php";
 
 async function loadSettings() {
   try {
@@ -13,6 +15,21 @@ async function loadSettings() {
     settings.forEach((s) => {
       const input = document.getElementById(`setting-${s.setting_key}`);
       if (input) input.value = s.setting_value;
+
+      // show preview if key is an image and already has a value
+      const previewMap = {
+        hero_image:        "hero-image-preview",
+        portfolio_image_1: "portfolio-1-preview",
+        portfolio_image_2: "portfolio-2-preview",
+        portfolio_image_3: "portfolio-3-preview",
+      };
+      if (previewMap[s.setting_key] && s.setting_value) {
+        const preview = document.getElementById(previewMap[s.setting_key]);
+        if (preview) {
+          preview.src          = SITE_BASE + s.setting_value;
+          preview.style.display = "block";
+        }
+      }
     });
   } catch (err) {
     console.error("Error loading settings:", err);
@@ -23,16 +40,16 @@ async function saveSettings() {
   const messageEl = document.getElementById("settings-message");
   const payload = {
     whatsapp_number: document.getElementById("setting-whatsapp_number").value.trim(),
-    about_us_text: document.getElementById("setting-about_us_text").value.trim(),
-    schedule_today: document.getElementById("setting-schedule_today").value.trim(),
-    address: document.getElementById("setting-address").value.trim(),
+    about_us_text:   document.getElementById("setting-about_us_text").value.trim(),
+    schedule_today:  document.getElementById("setting-schedule_today").value.trim(),
+    address:         document.getElementById("setting-address").value.trim(),
   };
 
   try {
     const res  = await fetch(`${SETTINGS_API}?action=update`, {
-      method: "POST",
+      method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body:    JSON.stringify(payload),
     });
     const data = await res.json();
 
@@ -46,7 +63,67 @@ async function saveSettings() {
     }
   } catch (err) {
     messageEl.style.display = "block";
-    messageEl.style.color = "var(--admin-danger)";
-    messageEl.textContent = "Error de conexión, intenta de nuevo.";
+    messageEl.style.color   = "var(--admin-danger)";
+    messageEl.textContent   = "Error de conexión, intenta de nuevo.";
   }
 }
+
+async function uploadImage(file, folder) {
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("folder", folder);
+
+  const res  = await fetch(UPLOAD_API, { method: "POST", body: formData });
+  const data = await res.json();
+  return data;
+}
+
+async function handleSiteImageUpload(inputId, previewId, settingKey) {
+  const input = document.getElementById(inputId);
+  const file  = input.files[0];
+  if (!file) return;
+
+  const uploadResult = await uploadImage(file, "site");
+  if (!uploadResult.success) {
+    alert(uploadResult.message || "No se pudo subir la imagen.");
+    return;
+  }
+
+  // save path immediately in site_settings
+  const saveResult = await fetch(`${SETTINGS_API}?action=update`, {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify({ [settingKey]: uploadResult.path }),
+  });
+  const saveData = await saveResult.json();
+
+  if (saveData.success) {
+    const preview         = document.getElementById(previewId);
+    preview.src           = SITE_BASE + uploadResult.path;
+    preview.style.display = "block";
+  } else {
+    alert(saveData.message || "La imagen se subió pero no se pudo guardar.");
+  }
+}
+
+// ── IMAGE UPLOAD LISTENERS ──
+// window.load ensures DOM is fully ready even when scripts load at end of body
+window.addEventListener("load", () => {
+  const heroFile = document.getElementById("hero-image-file");
+  const p1File   = document.getElementById("portfolio-1-file");
+  const p2File   = document.getElementById("portfolio-2-file");
+  const p3File   = document.getElementById("portfolio-3-file");
+
+  if (heroFile) heroFile.addEventListener("change", () =>
+    handleSiteImageUpload("hero-image-file", "hero-image-preview", "hero_image")
+  );
+  if (p1File) p1File.addEventListener("change", () =>
+    handleSiteImageUpload("portfolio-1-file", "portfolio-1-preview", "portfolio_image_1")
+  );
+  if (p2File) p2File.addEventListener("change", () =>
+    handleSiteImageUpload("portfolio-2-file", "portfolio-2-preview", "portfolio_image_2")
+  );
+  if (p3File) p3File.addEventListener("change", () =>
+    handleSiteImageUpload("portfolio-3-file", "portfolio-3-preview", "portfolio_image_3")
+  );
+});
