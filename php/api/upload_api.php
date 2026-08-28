@@ -2,54 +2,58 @@
 session_start();
 header("Content-Type: application/json");
 
-// DEBUG TEMPORAL — bórralo después de confirmar
-error_log("SESSION: " . print_r($_SESSION, true));
-error_log("FILES: " . print_r($_FILES, true));
-error_log("POST: " . print_r($_POST, true));
-
 function requireAdmin() {
   if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'No autorizado — sesión: ' . json_encode($_SESSION)]);
+    echo json_encode(['success' => false, 'message' => 'No autorizado']);
     exit;
   }
 }
 requireAdmin();
 
-$allowedTypes   = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']; // agregamos image/jpg
-$allowedFolders = ['services', 'team', 'site'];
-$maxSize        = 5 * 1024 * 1024;
+$allowedTypes   = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+$allowedFolders = ['logos', 'portfolio', 'services', 'team'];
+$maxSize        = 5 * 1024 * 1024; // 5MB
 
-$folder = $_POST['folder'] ?? '';
+$folder    = $_POST['folder'] ?? '';
+$subfolder = $_POST['subfolder'] ?? '';
+$oldPath   = $_POST['old_path'] ?? '';
 
 if (!in_array($folder, $allowedFolders, true)) {
-  echo json_encode(['success' => false, 'message' => 'Carpeta no válida: ' . $folder]);
+  echo json_encode(['success' => false, 'message' => 'Carpeta no válida.']);
   exit;
 }
 
 if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-  $errorCode = $_FILES['image']['error'] ?? 'no file';
-  echo json_encode(['success' => false, 'message' => 'Error de archivo: ' . $errorCode]);
+  echo json_encode(['success' => false, 'message' => 'No se recibió ninguna imagen válida.']);
   exit;
 }
 
 $file = $_FILES['image'];
 
 if (!in_array($file['type'], $allowedTypes, true)) {
-  echo json_encode(['success' => false, 'message' => 'Tipo no permitido: ' . $file['type']]);
+  echo json_encode(['success' => false, 'message' => 'Solo se permiten imágenes JPG, PNG o WEBP.']);
   exit;
 }
 
 if ($file['size'] > $maxSize) {
-  echo json_encode(['success' => false, 'message' => 'Imagen muy grande: ' . $file['size']]);
+  echo json_encode(['success' => false, 'message' => 'La imagen no puede pesar más de 5MB.']);
   exit;
+}
+
+$safeSubfolder = '';
+if ($folder === 'services' && $subfolder !== '') {
+  $slug = strtolower(str_replace(' ', '-', $subfolder));
+  $safeSubfolder = preg_replace('/[^a-z0-9\-]/', '', $slug);
 }
 
 $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 $safeExt  = in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true) ? $ext : 'jpg';
 $filename = uniqid('img_', true) . '.' . $safeExt;
 
-$targetDir = __DIR__ . '/../../assets/images/' . $folder . '/';
+$relativeDir = $safeSubfolder !== '' ? $folder . '/' . $safeSubfolder : $folder;
+$targetDir   = __DIR__ . '/../../assets/images/' . $relativeDir . '/';
+
 if (!is_dir($targetDir)) {
   mkdir($targetDir, 0755, true);
 }
@@ -57,9 +61,17 @@ if (!is_dir($targetDir)) {
 $targetPath = $targetDir . $filename;
 
 if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-  echo json_encode(['success' => false, 'message' => 'Error al mover archivo. TargetDir: ' . $targetDir]);
+  echo json_encode(['success' => false, 'message' => 'Error al guardar la imagen en el servidor.']);
   exit;
 }
 
-$publicPath = 'assets/images/' . $folder . '/' . $filename;
+if ($oldPath !== '' && strpos($oldPath, 'assets/images/') === 0) {
+  $oldFullPath = __DIR__ . '/../../' . $oldPath;
+  if (is_file($oldFullPath)) {
+    @unlink($oldFullPath);
+  }
+}
+
+$publicPath = 'assets/images/' . $relativeDir . '/' . $filename;
 echo json_encode(['success' => true, 'path' => $publicPath]);
+?>

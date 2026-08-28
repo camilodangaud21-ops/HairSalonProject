@@ -35,3 +35,54 @@ async function submitLogin() {
     errorEl.style.display = "block";
   }
 }
+
+// ── REGISTER MODAL ──
+function openRegister() {
+  document.getElementById("register-modal").classList.add("active");
+}
+
+function closeRegister() {
+  document.getElementById("register-modal").classList.remove("active");
+}
+
+function switchToRegister() {
+  closeLogin();
+  openRegister();
+}
+
+function switchToLogin() {
+  closeRegister();
+  openLogin();
+}
+
+async function submitRegister() {
+  const errorEl   = document.getElementById("reg-error");
+  const firstName = document.getElementById("reg-first-name").value.trim();
+  const lastName  = document.getElementById("reg-last-name").value.trim();
+  const email     = document.getElementById("reg-email").value.trim();
+  const password  = document.getElementById("reg-password").value.trim();
+
+  try {
+    const res  = await fetch("/peluqueria/php/auth/register.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        first_name: firstName,
+        last_name:  lastName,
+        email,
+        password,
+      }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      window.location.href = data.redirect;
+    } else {
+      errorEl.textContent   = data.message;
+      errorEl.style.display = "block";
+    }
+  } catch (err) {
+    errorEl.textContent   = "Error de conexión, intenta de nuevo.";
+    errorEl.style.display = "block";
+  }
+}

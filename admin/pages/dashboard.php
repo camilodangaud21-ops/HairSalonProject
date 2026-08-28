@@ -257,8 +257,11 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
     <input class="modal-input" id="team-name" placeholder="Nombre completo" />
     <input class="modal-input" id="team-role" placeholder="Rol (ej: Estilista)" />
     <input class="modal-input" id="team-rating" type="number" step="0.1" min="0" max="5" placeholder="Rating (ej: 4.5)" />
-    <input class="modal-input" id="team-photo" placeholder="URL de foto (opcional)" />
     <input class="modal-input" id="team-display-order" type="number" placeholder="Orden de aparición" />
+    <input type="hidden" id="team-photo" />
+    <label style="color:var(--muted); font-size:.8rem; margin-bottom:4px; display:block;">Foto del miembro</label>
+    <input type="file" id="team-photo-file" accept="image/*" class="modal-input" style="padding:6px;" />
+    <img id="team-photo-preview" src="" alt="preview" style="display:none; width:80px; height:80px; object-fit:cover; border-radius:50%; border:2px solid var(--gold); margin:8px 0;" />
     <button onclick="saveTeamMember()" class="btn-reservar" style="width:100%; padding:10px;">Guardar</button>
     <p id="team-error" class="modal-error" style="display:none;"></p>
     <button onclick="closeTeamForm()" class="modal-cancel">Cancelar</button>

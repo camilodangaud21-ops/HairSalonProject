@@ -16,7 +16,6 @@ async function loadSettings() {
       const input = document.getElementById(`setting-${s.setting_key}`);
       if (input) input.value = s.setting_value;
 
-      // show preview if key is an image and already has a value
       const previewMap = {
         hero_image:        "hero-image-preview",
         portfolio_image_1: "portfolio-1-preview",
@@ -68,62 +67,60 @@ async function saveSettings() {
   }
 }
 
-async function uploadImage(file, folder) {
+async function uploadImage(file, folder, subfolder, oldPath) {
   const formData = new FormData();
   formData.append("image", file);
   formData.append("folder", folder);
+  if (subfolder) formData.append("subfolder", subfolder);
+  if (oldPath) formData.append("old_path", oldPath);
 
   const res  = await fetch(UPLOAD_API, { method: "POST", body: formData });
   const data = await res.json();
   return data;
 }
 
-async function handleSiteImageUpload(inputId, previewId, settingKey) {
+async function handleSiteImageUpload(inputId, previewId, settingKey, folder) {
   const input = document.getElementById(inputId);
   const file  = input.files[0];
   if (!file) return;
 
-  const uploadResult = await uploadImage(file, "site");
+  const currentInput = document.getElementById(`setting-${settingKey}`);
+  const oldPath = currentInput ? currentInput.value : "";
+
+  const uploadResult = await uploadImage(file, folder, null, oldPath);
   if (!uploadResult.success) {
     alert(uploadResult.message || "No se pudo subir la imagen.");
     return;
   }
 
-  // save path immediately in site_settings
   const saveResult = await fetch(`${SETTINGS_API}?action=update`, {
-    method:  "POST",
+    method: "POST",
     headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify({ [settingKey]: uploadResult.path }),
+    body: JSON.stringify({ [settingKey]: uploadResult.path }),
   });
   const saveData = await saveResult.json();
 
   if (saveData.success) {
-    const preview         = document.getElementById(previewId);
-    preview.src           = SITE_BASE + uploadResult.path;
+    const preview = document.getElementById(previewId);
+    preview.src = SITE_BASE + uploadResult.path;
     preview.style.display = "block";
+    if (currentInput) currentInput.value = uploadResult.path; 
   } else {
     alert(saveData.message || "La imagen se subió pero no se pudo guardar.");
   }
 }
 
-// ── IMAGE UPLOAD LISTENERS ──
-// window.load ensures DOM is fully ready even when scripts load at end of body
-window.addEventListener("load", () => {
-  const heroFile = document.getElementById("hero-image-file");
-  const p1File   = document.getElementById("portfolio-1-file");
-  const p2File   = document.getElementById("portfolio-2-file");
-  const p3File   = document.getElementById("portfolio-3-file");
-
-  if (heroFile) heroFile.addEventListener("change", () =>
-    handleSiteImageUpload("hero-image-file", "hero-image-preview", "hero_image")
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("hero-image-file")?.addEventListener("change", () =>
+    handleSiteImageUpload("hero-image-file", "hero-image-preview", "hero_image", "logos")
   );
-  if (p1File) p1File.addEventListener("change", () =>
-    handleSiteImageUpload("portfolio-1-file", "portfolio-1-preview", "portfolio_image_1")
+  document.getElementById("portfolio-1-file")?.addEventListener("change", () =>
+    handleSiteImageUpload("portfolio-1-file", "portfolio-1-preview", "portfolio_image_1", "portfolio")
   );
-  if (p2File) p2File.addEventListener("change", () =>
-    handleSiteImageUpload("portfolio-2-file", "portfolio-2-preview", "portfolio_image_2")
+  document.getElementById("portfolio-2-file")?.addEventListener("change", () =>
+    handleSiteImageUpload("portfolio-2-file", "portfolio-2-preview", "portfolio_image_2", "portfolio")
   );
-  if (p3File) p3File.addEventListener("change", () =>
-    handleSiteImageUpload("portfolio-3-file", "portfolio-3-preview", "portfolio_image_3")
+  document.getElementById("portfolio-3-file")?.addEventListener("change", () =>
+    handleSiteImageUpload("portfolio-3-file", "portfolio-3-preview", "portfolio_image_3", "portfolio")
   );
 });

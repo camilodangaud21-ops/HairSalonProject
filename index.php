@@ -211,8 +211,23 @@ $settings = $settingsController->getAllAsMap();
     <input id="login-email" class="modal-input" type="email" placeholder="Correo electrónico"/>
     <input id="login-password" class="modal-input" type="password" placeholder="Contraseña"/>
     <button onclick="submitLogin()" class="btn-reservar" style="width:100%; padding:10px;">Ingresar</button>
+    <button onclick="switchToRegister()" class="modal-cancel">¿No tienes cuenta? Regístrate</button>
     <p id="login-error" class="modal-error">Correo o contraseña incorrectos</p>
     <button onclick="closeLogin()" class="modal-cancel">Cancelar</button>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div id="register-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 class="modal-title">Crear cuenta</h2>
+    <input id="reg-first-name" class="modal-input" type="text"     placeholder="Nombre" />
+    <input id="reg-last-name"  class="modal-input" type="text"     placeholder="Apellido" />
+    <input id="reg-email"      class="modal-input" type="email"    placeholder="Correo electrónico" />
+    <input id="reg-password"   class="modal-input" type="password" placeholder="Contraseña (mín. 6 caracteres)" />
+    <button onclick="submitRegister()" class="btn-reservar" style="width:100%; padding:10px;">Crear cuenta</button>
+    <p id="reg-error" class="modal-error"></p>
+    <button onclick="switchToLogin()" class="modal-cancel">¿Ya tienes cuenta? Inicia sesión</button>
   </div>
 </div>
 

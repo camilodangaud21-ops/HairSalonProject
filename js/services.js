@@ -24,6 +24,7 @@ async function loadServices() {
       tiempo:  s.duration,
       popular: s.popular == 1,
       desc:    s.description,
+      imagen:  s.image,
     }));
 
     const countEl = document.getElementById("cat-count-total");
@@ -48,11 +49,19 @@ function renderServices(list) {
     const msg = encodeURIComponent(
       `Hola! Me interesa reservar el servicio: ${s.nombre} (${s.precio})`
     );
+
+    const thumbHtml = s.imagen
+  ? `<div class="service-thumb-wrap">
+       <img class="service-thumb-img" src="/peluqueria/${s.imagen}" alt="${s.nombre}" />
+       <div class="thumb-overlay ${catClass[s.cat] || "cat-pelq"}">
+         <span>${catLabel[s.cat] || s.cat}</span>
+       </div>
+     </div>`
+  : `<div class="service-thumb ${catClass[s.cat] || "cat-pelq"}">${catLabel[s.cat] || s.cat}</div>`;
+
     return `
     <div class="service-card">
-      <div class="service-thumb ${catClass[s.cat] || "cat-pelq"}">
-        ${catLabel[s.cat] || s.cat}
-      </div>
+      ${thumbHtml}
       <div class="service-body">
         ${s.popular ? '<span class="service-popular">⭐ Popular</span>' : ""}
         <div class="service-name">${s.nombre}</div>
