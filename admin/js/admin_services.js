@@ -46,12 +46,12 @@ async function toggleServiceActive(id, newActive) {
     });
     const data = await res.json();
     if (data.success) {
-      loadServices();
+      showAlert("Estado del servicio actualizado. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo cambiar el estado.");
+      showAlert(data.message || "No se pudo cambiar el estado.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
 
@@ -197,7 +197,7 @@ async function saveService() {
 
     if (data.success) {
       closeServiceForm();
-      loadServices();
+      showAlert("Servicio guardado correctamente. Recargando…", "success", { reload: true });
     } else {
       errorEl.textContent   = data.message || "No se pudo guardar el servicio.";
       errorEl.style.display = "block";
@@ -215,11 +215,11 @@ async function deleteService(id) {
     const res  = await fetch(`${SERVICES_API}?action=delete&id=${id}`, { method: "POST" });
     const data = await res.json();
     if (data.success) {
-      loadServices();
+      showAlert("Servicio eliminado correctamente. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo eliminar el servicio.");
+      showAlert(data.message || "No se pudo eliminar el servicio.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
