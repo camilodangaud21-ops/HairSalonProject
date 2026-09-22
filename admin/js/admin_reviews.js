@@ -53,12 +53,12 @@ async function toggleReviewFeatured(id, newValue) {
     });
     const data = await res.json();
     if (data.success) {
-      loadReviews();
+      showAlert("Destacado actualizado. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo cambiar el destacado.");
+      showAlert(data.message || "No se pudo cambiar el destacado.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
 
@@ -71,12 +71,12 @@ async function toggleReviewActive(id, newActive) {
     });
     const data = await res.json();
     if (data.success) {
-      loadReviews();
+      showAlert("Estado de la reseña actualizado. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo cambiar el estado.");
+      showAlert(data.message || "No se pudo cambiar el estado.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
 
@@ -87,11 +87,11 @@ async function deleteReview(id) {
     const res  = await fetch(`${ADMIN_REVIEWS_API}?action=delete&id=${id}`, { method: "POST" });
     const data = await res.json();
     if (data.success) {
-      loadReviews();
+      showAlert("Reseña eliminada correctamente. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo eliminar.");
+      showAlert(data.message || "No se pudo eliminar.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
