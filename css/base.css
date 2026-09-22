@@ -22,7 +22,7 @@
   --content-max: 1180px;
 
   --shadow-card: 0 8px 24px rgba(0,0,0,.18);
-  --focus-ring: 0 0 0 3px rgba(232,201,106,.28);
+  --focus-ring: 0 0 0 3px rgba(232,201,106,.28);\n  --ease-out: cubic-bezier(.22, 1, .36, 1);\n  --ease-smooth: cubic-bezier(.2, .8, .2, 1);
 }
 
 *,
@@ -47,7 +47,7 @@ body {
   font-family: Georgia, serif;
   font-size: 15px;
   line-height: 1.5;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;\n  transition: background-color .3s var(--ease-smooth), color .3s var(--ease-smooth);
 }
 
 button,
