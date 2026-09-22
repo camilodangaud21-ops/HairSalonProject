@@ -2,7 +2,7 @@
 session_start();
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../models/user.php';   
+require_once __DIR__ . '/../models/users.php';   
 require_once __DIR__ . '/../config/users_crud.php';
 require_once __DIR__ . '/../config/conection.php';
 
@@ -42,7 +42,7 @@ $ok = $crud->create([
     'last_name'  => $last_name,
     'email'      => $email,
     'password'   => $password,
-    'role'       => 'user',
+    'role'       => 'client',
 ]);
 
 if(!$ok){
