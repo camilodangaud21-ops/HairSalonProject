@@ -54,16 +54,13 @@ async function saveSettings() {
 
     messageEl.style.display = "block";
     if (data.success) {
-      messageEl.style.color = "var(--admin-success)";
-      messageEl.textContent = "Cambios guardados correctamente.";
+      showAlert("Cambios guardados correctamente. Actualizando…", "success", { reload: true });
     } else {
       messageEl.style.color = "var(--admin-danger)";
       messageEl.textContent = data.message || "No se pudieron guardar los cambios.";
     }
   } catch (err) {
-    messageEl.style.display = "block";
-    messageEl.style.color   = "var(--admin-danger)";
-    messageEl.textContent   = "Error de conexión, intenta de nuevo.";
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
 
@@ -89,7 +86,7 @@ async function handleSiteImageUpload(inputId, previewId, settingKey, folder) {
 
   const uploadResult = await uploadImage(file, folder, null, oldPath);
   if (!uploadResult.success) {
-    alert(uploadResult.message || "No se pudo subir la imagen.");
+    showAlert(uploadResult.message || "No se pudo subir la imagen.", "error");
     return;
   }
 
@@ -104,9 +101,10 @@ async function handleSiteImageUpload(inputId, previewId, settingKey, folder) {
     const preview = document.getElementById(previewId);
     preview.src = SITE_BASE + uploadResult.path;
     preview.style.display = "block";
-    if (currentInput) currentInput.value = uploadResult.path; 
+    if (currentInput) currentInput.value = uploadResult.path;
+    showAlert("Imagen actualizada correctamente. Recargando…", "success", { reload: true });
   } else {
-    alert(saveData.message || "La imagen se subió pero no se pudo guardar.");
+    showAlert(saveData.message || "La imagen se subió pero no se pudo guardar.", "error");
   }
 }
 
