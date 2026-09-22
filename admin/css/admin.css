@@ -174,3 +174,39 @@ body {
 .settings-label .modal-input {
   color: var(--admin-text);
 }
+
+/* Wide desktop admin layout + smoother interactions */
+.admin-header {
+  width: 100%;
+  padding: 20px clamp(20px, 3vw, 48px);
+  transition: background-color .3s var(--ease-smooth), border-color .3s var(--ease-smooth);
+}
+.admin-main {
+  width: min(calc(100% - 40px), 1600px);
+  margin: 0 auto;
+  padding: 30px 0 56px;
+}
+.admin-table {
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  transition: box-shadow .35s var(--ease-smooth), border-color .3s var(--ease-smooth);
+}
+.admin-table tbody tr {
+  transition: background-color .25s var(--ease-smooth), opacity .25s var(--ease-smooth);
+}
+.btn-small {
+  min-height: 36px;
+  transition: transform .22s var(--ease-out), opacity .25s var(--ease-smooth), background-color .25s var(--ease-smooth);
+}
+.btn-small:hover { transform: translateY(-1px); }
+.settings-form { max-width: 720px; }
+.modal-box { width: min(100%, 560px); }
+
+@media (min-width: 1200px) {
+  .admin-main { width: min(calc(100% - 64px), 1600px); }
+  .admin-main .admin-table th,
+  .admin-main .admin-table td { padding-left: 18px; padding-right: 18px; }
+}
+@media (max-width: 768px) {
+  .admin-main { width: calc(100% - 24px); padding: 20px 0 40px; }
+}
