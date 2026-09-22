@@ -153,7 +153,7 @@ async function saveTeamMember() {
 
     if (data.success) {
       closeTeamForm();
-      loadTeam();
+      showAlert("Miembro guardado correctamente. Recargando…", "success", { reload: true });
     } else {
       errorEl.textContent = data.message || "No se pudo guardar el miembro.";
       errorEl.classList.add("active");
@@ -173,12 +173,12 @@ async function toggleTeamActive(id, newActive) {
     });
     const data = await res.json();
     if (data.success) {
-      loadTeam();
+      showAlert("Estado del miembro actualizado. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo cambiar el estado.");
+      showAlert(data.message || "No se pudo cambiar el estado.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
 
@@ -189,11 +189,11 @@ async function deleteTeamMember(id) {
     const res  = await fetch(`${TEAM_API}?action=delete&id=${id}`, { method: "POST" });
     const data = await res.json();
     if (data.success) {
-      loadTeam();
+      showAlert("Miembro eliminado correctamente. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo eliminar.");
+      showAlert(data.message || "No se pudo eliminar.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
