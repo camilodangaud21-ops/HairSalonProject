@@ -68,8 +68,6 @@ $settings = $settingsController->getAllAsMap();
 
 <!-- ── SERVICES PANEL ── -->
 <div class="panel active" id="panel-servicios">
-
-  <!-- About -->
   <div class="about-grid" style="margin-bottom:20px;">
     <div class="about-text">
       <h2>Sobre nosotros</h2>
@@ -101,19 +99,14 @@ $settings = $settingsController->getAllAsMap();
     </div>
   </div>
 
-  <!-- Search -->
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input type="text" id="search-input" name="service-search" placeholder="Buscar servicios..." autocomplete="off"/>
+    <input type="search" id="search-input" name="service-query" placeholder="Buscar servicios..." autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="search" readonly />
   </div>
 
-  <!-- Category filter -->
   <div class="cat-scroll"></div>
-
-  <!-- Services grid -->
   <div class="services-grid" id="services-grid"></div>
   <p class="no-results" id="no-results" style="display:none">No se encontraron servicios.</p>
-
 </div>
 
 <!-- ── TEAM PANEL ── -->
@@ -157,11 +150,7 @@ $settings = $settingsController->getAllAsMap();
   <div class="review-form" style="margin:16px 0;">
     <h3 style="color:var(--gold); font-size:.9rem; margin-bottom:10px;">Deja tu reseña</h3>
     <div id="review-stars" style="font-size:1.5rem; cursor:pointer; margin-bottom:8px;">
-      <span data-val="1">☆</span>
-      <span data-val="2">☆</span>
-      <span data-val="3">☆</span>
-      <span data-val="4">☆</span>
-      <span data-val="5">☆</span>
+      <span data-val="1">☆</span><span data-val="2">☆</span><span data-val="3">☆</span><span data-val="4">☆</span><span data-val="5">☆</span>
     </div>
     <input type="hidden" id="review-rating" value="0" />
     <textarea class="modal-input" id="review-comment" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
@@ -173,7 +162,6 @@ $settings = $settingsController->getAllAsMap();
   <div id="resenas-list"></div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-brand">
     <h4>isabel rojas peluquería y spa</h4>
@@ -192,19 +180,12 @@ $settings = $settingsController->getAllAsMap();
   </div>
   <div class="footer-links">
     <h5>Más información</h5>
-    <div class="info-row" style="margin-bottom:8px;">
-      <span class="info-icon">📍</span>
-      <span style="font-size:.8rem;color:var(--muted);"><?= htmlspecialchars($settings['address'] ?? '') ?></span>
-    </div>
-    <div class="info-row">
-      <span class="info-icon">🕐</span>
-      <span style="font-size:.8rem;color:var(--muted);"><?= htmlspecialchars($settings['schedule_today'] ?? '') ?></span>
-    </div>
+    <div class="info-row" style="margin-bottom:8px;"><span class="info-icon">📍</span><span style="font-size:.8rem;color:var(--muted);"><?= htmlspecialchars($settings['address'] ?? '') ?></span></div>
+    <div class="info-row"><span class="info-icon">🕐</span><span style="font-size:.8rem;color:var(--muted);"><?= htmlspecialchars($settings['schedule_today'] ?? '') ?></span></div>
   </div>
   <div class="footer-copy">© 2026 Isabel Rojas Beauty Salón & Spa · Cartagena, Colombia</div>
 </footer>
 
-<!-- LOGIN MODAL -->
 <div id="login-modal" class="modal-overlay">
   <div class="modal-box">
     <h2 class="modal-title">Iniciar sesión</h2>
@@ -217,14 +198,13 @@ $settings = $settingsController->getAllAsMap();
   </div>
 </div>
 
-<!-- REGISTER MODAL -->
 <div id="register-modal" class="modal-overlay">
   <div class="modal-box">
     <h2 class="modal-title">Crear cuenta</h2>
-    <input id="reg-first-name" class="modal-input" type="text"     placeholder="Nombre" />
-    <input id="reg-last-name"  class="modal-input" type="text"     placeholder="Apellido" />
-    <input id="reg-email"      class="modal-input" type="email"    placeholder="Correo electrónico" />
-    <input id="reg-password"   class="modal-input" type="password" placeholder="Contraseña (mín. 6 caracteres)" />
+    <input id="reg-first-name" class="modal-input" type="text" placeholder="Nombre" />
+    <input id="reg-last-name" class="modal-input" type="text" placeholder="Apellido" />
+    <input id="reg-email" class="modal-input" type="email" placeholder="Correo electrónico" />
+    <input id="reg-password" class="modal-input" type="password" placeholder="Contraseña (mín. 6 caracteres)" />
     <button onclick="submitRegister()" class="btn-reservar" style="width:100%; padding:10px;">Crear cuenta</button>
     <p id="reg-error" class="modal-error"></p>
     <button onclick="switchToLogin()" class="modal-cancel">¿Ya tienes cuenta? Inicia sesión</button>
@@ -234,13 +214,12 @@ $settings = $settingsController->getAllAsMap();
 <script>
   const SITE_WHATSAPP = <?= json_encode($settings['whatsapp_number'] ?? '573000000000') ?>;
 </script>
-
+<script src="js/alerts.js"></script>
 <script src="js/login.js"></script>
 <script src="js/categories.js"></script>
 <script src="js/services.js"></script>
 <script src="js/tabs.js"></script>
 <script src="js/main.js"></script>
 <script src="js/reviews.js"></script>
-
 </body>
 </html>
