@@ -181,6 +181,12 @@ body {
   padding: 20px clamp(20px, 3vw, 48px);
   transition: background-color .3s var(--ease-smooth), border-color .3s var(--ease-smooth);
 }
+.admin-header + .tabs {
+  width: min(calc(100% - 40px), 1600px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .admin-main {
   width: min(calc(100% - 40px), 1600px);
   margin: 0 auto;
@@ -208,5 +214,6 @@ body {
   .admin-main .admin-table td { padding-left: 18px; padding-right: 18px; }
 }
 @media (max-width: 768px) {
+  .admin-header + .tabs { width: 100%; }
   .admin-main { width: calc(100% - 24px); padding: 20px 0 40px; }
 }
