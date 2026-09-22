@@ -101,7 +101,7 @@ async function saveCategory() {
 
     if (data.success) {
       closeCategoryForm();
-      loadCategories();
+      showAlert("Categoría guardada correctamente. Recargando…", "success", { reload: true });
     } else {
       errorEl.textContent = data.message || "No se pudo guardar la categoría.";
       errorEl.style.display = "block";
@@ -121,12 +121,12 @@ async function toggleCategoryActive(id, newActive) {
     });
     const data = await res.json();
     if (data.success) {
-      loadCategories();
+      showAlert("Estado de la categoría actualizado. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo cambiar el estado.");
+      showAlert(data.message || "No se pudo cambiar el estado.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
 
@@ -137,11 +137,11 @@ async function deleteCategory(id) {
     const res  = await fetch(`${CATEGORIES_API}?action=delete&id=${id}`, { method: "POST" });
     const data = await res.json();
     if (data.success) {
-      loadCategories();
+      showAlert("Categoría eliminada correctamente. Recargando…", "success", { reload: true });
     } else {
-      alert(data.message || "No se pudo eliminar.");
+      showAlert(data.message || "No se pudo eliminar.", "error");
     }
   } catch (err) {
-    alert("Error de conexión, intenta de nuevo.");
+    showAlert("Error de conexión, intenta de nuevo.", "error");
   }
 }
