@@ -1,14 +1,12 @@
 /* ══════════════════════════════════════════
    LAYOUT.CSS
-   Overall page structure: hero, info bar,
-   tabs, panels, section grids, footer, and
-   responsive rules.
+   Page structure and responsive behavior.
+   Visual-only layer: no application logic.
    ══════════════════════════════════════════ */
 
-/* ── HEADER / HERO ── */
 .hero {
   position: relative;
-  height: 220px;
+  height: clamp(210px, 28vw, 320px);
   overflow: hidden;
   background: #1a1510;
 }
@@ -16,28 +14,27 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.55;
+  opacity: .55;
 }
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, var(--dark) 100%);
+  background: linear-gradient(to bottom, transparent 28%, var(--dark) 100%);
 }
 
-/* ── INFO BAR ── */
 .info-bar {
-  padding: 16px var(--gap) 0;
+  width: min(100% - 32px, var(--content-max));
+  margin: 0 auto;
+  padding: 16px 0 0;
 }
 .info-bar h1 {
-  font-size: 1.35rem;
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
   font-weight: normal;
-  letter-spacing: 0.5px;
+  letter-spacing: .5px;
   color: var(--white);
   text-transform: lowercase;
 }
-.info-bar h1 span {
-  color: var(--gold);
-}
+.info-bar h1 span { color: var(--gold); }
 .badges {
   display: flex;
   flex-wrap: wrap;
@@ -48,48 +45,45 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8rem;
+  font-size: .82rem;
   color: var(--muted);
-  margin-bottom: 4px;
+  margin-bottom: 5px;
+  min-width: 0;
 }
-.meta-row .star {
-  color: var(--gold);
-  font-size: 0.9rem;
-}
+.meta-row > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.meta-row .star { color: var(--gold); font-size: .9rem; }
 
-/* ── TABS ── */
 .tabs {
   display: flex;
+  width: min(100%, var(--content-max));
+  margin: 16px auto 0;
   border-bottom: 1px solid var(--border);
-  margin: 16px 0 0;
 }
 .tab {
   flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 10px 0;
-  font-size: 0.85rem;
+  padding: 10px 8px;
+  font-size: .85rem;
   color: var(--muted);
   cursor: pointer;
   border-bottom: 2px solid transparent;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
+  transition: color .2s, border-color .2s, background-color .2s;
 }
-.tab.active {
-  color: var(--gold);
-  border-bottom-color: var(--gold);
-}
+.tab:hover { background: rgba(255,255,255,.025); }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
-/* ── PANEL ── */
 .panel {
   display: none;
-  padding: var(--gap);
+  width: min(100%, var(--content-max));
+  margin: 0 auto;
+  padding: 20px var(--gap);
 }
-.panel.active {
-  display: block;
-}
+.panel.active { display: block; }
 
-/* ── ABOUT (grid general) ── */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -102,27 +96,13 @@
   margin-bottom: 12px;
 }
 
-/* ── SERVICIOS (grid general) ── */
 .services-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  max-width: 900px;
-  margin: 0 auto; 
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 1080px;
+  margin: 0 auto;
 }
-
-@media (min-width: 480px) {
-  .services-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 768px) {
-  .services-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 .no-results {
   text-align: center;
   color: var(--muted);
@@ -130,44 +110,34 @@
   font-family: sans-serif;
 }
 
-/* ── EQUIPO (grid general) ── */
-
 .equipo-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
-@media (min-width: 480px) {
-  .equipo-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
-/* ── RESEÑAS (layout general) ── */
 .rating-summary {
   display: flex;
   gap: 16px;
   align-items: center;
   margin-bottom: 16px;
 }
-.rating-bars {
-  flex: 1;
-}
+.rating-bars { flex: 1; min-width: 0; }
 .bar-row {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 4px;
-  font-size: 0.75rem;
+  font-size: .75rem;
   font-family: sans-serif;
 }
 .bar-track {
   flex: 1;
+  min-width: 0;
   height: 6px;
   border-radius: 3px;
   overflow: hidden;
 }
-
 .resena-header {
   display: flex;
   gap: 10px;
@@ -175,54 +145,71 @@
   margin-bottom: 8px;
 }
 
-/* ── FOOTER ── */
 footer {
-  padding: 24px var(--gap);
-  margin-top: 24px;
+  width: min(100% - 32px, var(--content-max));
+  margin: 24px auto 0;
+  padding: 24px 0;
 }
-.footer-brand {
-  margin-bottom: 14px;
-}
-.footer-social {
-  display: flex;
-  gap: 12px;
-  margin-top: 10px;
-}
+.footer-brand { margin-bottom: 14px; }
+.footer-social { display: flex; gap: 12px; margin-top: 10px; }
 .footer-copy {
   margin-top: 20px;
   border-top: 1px solid var(--border);
   padding-top: 14px;
-  font-size: 0.72rem;
+  font-size: .72rem;
   color: var(--muted);
   font-family: sans-serif;
   text-align: center;
 }
 
-/* ══════════════════════════════════════════
-   RESPONSIVE — DESKTOP
-   ══════════════════════════════════════════ */
-@media (min-width: 768px) {
-  .hero {
-    height: 320px;
-  }
-  .info-bar h1 {
-    font-size: 1.8rem;
-  }
-  .about-grid {
-    grid-template-columns: 1fr 300px;
-  }
-  .services-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+@media (min-width: 480px) {
+  .services-grid,
   .equipo-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+@media (min-width: 768px) {
+  .info-bar,
+  .tabs,
+  .panel,
+  footer {
+    width: min(100% - 48px, var(--content-max));
+  }
+
+  .about-grid { grid-template-columns: minmax(0, 1fr) 300px; }
+  .services-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   footer {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 24px;
   }
-  .footer-copy {
-    grid-column: 1/-1;
+  .footer-copy { grid-column: 1 / -1; }
+}
+
+@media (min-width: 1100px) {
+  .services-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 479px) {
+  .info-bar {
+    width: calc(100% - 24px);
+    padding-top: 12px;
   }
+  .tabs {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    width: 100%;
+    background: rgba(15,14,12,.96);
+    backdrop-filter: blur(10px);
+  }
+  .panel { width: 100%; padding: 16px 12px; }
+  .rating-summary { gap: 10px; }
+  footer { width: calc(100% - 24px); }
+}
+
+@media (max-width: 359px) {
+  .services-grid { gap: 8px; }
+  .service-body { padding-left: 7px; padding-right: 7px; }
 }
