@@ -1,3 +1,12 @@
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 /* ══════════════════════════════════════════
    ADMIN REVIEWS
    Table for moderating reviews.
@@ -17,9 +26,9 @@ function renderReviewsTable(reviews) {
     const tBody = document.getElementById("reviews-tbody");
     tBody.innerHTML = reviews.map(r => `
     <tr style="${r.active == 0 ? "opacity:.5;" : ""}">
-      <td>${r.author_name}</td>
+      <td>${escapeHtml(r.author_name)}</td>
       <td>${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</td>
-      <td style="max-width:200px; font-size:.8rem;">${r.comment ?? "—"}</td>
+      <td style="max-width:200px; font-size:.8rem;">${escapeHtml(r.comment || "—")}</td>
       <td>${r.featured == 1 ? "⭐ Sí" : "—"}</td>
       <td>${r.active == 1 ? "✅ Activa" : "🚫 Oculta"}</td>
       <td style="font-size:.8rem;">${formatReviewDate(r.created_at)}</td>
