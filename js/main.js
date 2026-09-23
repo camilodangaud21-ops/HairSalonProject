@@ -1,28 +1,44 @@
 /* MAIN: public-page bootstrap and search. */
-function resetServiceSearch() {
+
+// Wipe the field and re-arm the readonly guard when the user is not typing.
+function guardServiceSearch() {
+  const input = document.getElementById("search-input");
+  if (!input || input.matches(":focus")) return;
+  input.value = "";
+  input.setAttribute("readonly", "readonly");
+  searchQuery = "";
+}
+
+// Unlock the field only after a real user interaction.
+function armSearchInputUnlock() {
   const input = document.getElementById("search-input");
   if (!input) return;
-  input.value = "";
-  input.removeAttribute("readonly");
-  searchQuery = "";
+
+  const unlock = () => input.removeAttribute("readonly");
+  input.addEventListener("pointerdown", unlock, { once: true });
+  input.addEventListener("touchstart", unlock, { once: true });
+  input.addEventListener("keydown", unlock, { once: true });
+}
+
+// Clear delayed autofill values after the page becomes visible.
+function sweepServiceSearch() {
+  guardServiceSearch();
+  armSearchInputUnlock();
+  [50, 150, 300, 600, 1000].forEach((delay) => {
+    setTimeout(guardServiceSearch, delay);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("search-input");
 
   if (searchInput) {
-    searchInput.value = "";
-    searchInput.addEventListener("focus", () => {
-      searchInput.removeAttribute("readonly");
-    }, { once: true });
-
     searchInput.addEventListener("input", (e) => {
       searchQuery = e.target.value;
       filterServices();
     });
 
-    // Password managers/browser autofill can run after DOMContentLoaded.
-    setTimeout(resetServiceSearch, 150);
+    sweepServiceSearch();
   }
 
   document.querySelectorAll(".tab").forEach((tab) => {
@@ -33,10 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
   loadReviews();
 });
 
-window.addEventListener("pageshow", () => {
-  const input = document.getElementById("search-input");
-  if (input && !input.matches(":focus")) {
-    input.value = "";
-    searchQuery = "";
+// Re-run the guard after back/forward navigation and bfcache restores.
+window.addEventListener("pageshow", sweepServiceSearch);
+
+// Re-arm the guard when returning to this browser tab.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    sweepServiceSearch();
   }
 });

@@ -24,6 +24,7 @@ function renderReviewsTable(reviews) {
       <td>${r.active == 1 ? "✅ Activa" : "🚫 Oculta"}</td>
       <td style="font-size:.8rem;">${formatReviewDate(r.created_at)}</td>
       <td>
+        <button onclick="editReview(${r.id})" class="btn-small">✏️ Editar</button>
         <button onclick="toggleReviewFeatured(${r.id}, ${r.featured == 1 ? 0 : 1})" class="btn-small">
           ${r.featured == 1 ? "★ Quitar destacado" : "⭐ Destacar"}
         </button>
@@ -35,6 +36,80 @@ function renderReviewsTable(reviews) {
     </tr>
   `).join("");
 
+}
+
+let editingReviewId = null;
+
+function openReviewForm() {
+  editingReviewId = null;
+  document.getElementById("review-modal-title").textContent = "Nueva reseña";
+  document.getElementById("review-id").value       = "";
+  document.getElementById("review-author").value   = "";
+  document.getElementById("review-rating").value   = "5";
+  document.getElementById("review-comment").value  = "";
+  document.getElementById("review-featured").checked = false;
+  document.getElementById("review-error").style.display = "none";
+  document.getElementById("review-modal").classList.add("active");
+}
+
+function editReview(id) {
+  const r = adminReviews.find(x => x.id == id);
+  if (!r) return;
+  editingReviewId = id;
+  document.getElementById("review-modal-title").textContent = "Editar reseña";
+  document.getElementById("review-id").value       = r.id;
+  document.getElementById("review-author").value   = r.author_name;
+  document.getElementById("review-rating").value   = r.rating;
+  document.getElementById("review-comment").value  = r.comment ?? "";
+  document.getElementById("review-featured").checked = r.featured == 1;
+  document.getElementById("review-error").style.display = "none";
+  document.getElementById("review-modal").classList.add("active");
+}
+
+function closeReviewForm() {
+  document.getElementById("review-modal").classList.remove("active");
+}
+
+async function saveReview() {
+  const errorEl = document.getElementById("review-error");
+  errorEl.style.display = "none";
+
+  const payload = {
+    author_name: document.getElementById("review-author").value.trim(),
+    rating:      document.getElementById("review-rating").value,
+    comment:     document.getElementById("review-comment").value.trim(),
+    featured:    document.getElementById("review-featured").checked ? 1 : 0,
+  };
+
+  if (!payload.author_name || !payload.comment) {
+    errorEl.textContent   = "Nombre y comentario son obligatorios.";
+    errorEl.style.display = "block";
+    return;
+  }
+
+  try {
+    const url = editingReviewId
+      ? `${ADMIN_REVIEWS_API}?action=update&id=${editingReviewId}`
+      : `${ADMIN_REVIEWS_API}?action=create`;
+
+    const res  = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      closeReviewForm();
+      showAlert("Reseña guardada correctamente. Recargando…", "success", { reload: true });
+    } else {
+      errorEl.textContent   = data.message || "No se pudo guardar la reseña.";
+      errorEl.style.display = "block";
+    }
+  } catch (err) {
+    errorEl.textContent   = "Error de conexión, intenta de nuevo.";
+    errorEl.style.display = "block";
+  }
 }
 
 function formatReviewDate(dateStr) {

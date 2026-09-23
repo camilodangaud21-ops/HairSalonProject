@@ -23,10 +23,22 @@ function requireLogin() {
   }
 }
 
+function requireClient() {
+  if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'client') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Solo los clientes pueden dejar reseñas']);
+    exit;
+  }
+}
+
 switch ($action) {
 
   case 'featured':
     echo json_encode($controller->getFeatured());
+    break;
+
+  case 'all':
+    echo json_encode($controller->getAllActive());
     break;
 
   case 'summary':
@@ -41,9 +53,20 @@ switch ($action) {
   case 'create':
     requireLogin();
     $data = json_decode(file_get_contents('php://input'), true);
-    $data['author_name'] = $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
+    // Admins can set a custom author name (adding a review on behalf of a client).
+    // Regular clients always get their own session name, so they can't spoof another author.
+    if ($_SESSION['user']['role'] !== 'admin' || empty(trim($data['author_name'] ?? ''))) {
+      $data['author_name'] = $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
+    }
     echo json_encode($controller->create($data));
   break;
+
+  case 'createClient':
+    requireClient();
+    $data = json_decode(file_get_contents('php://input'), true);
+    $data['author_name'] = $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
+    echo json_encode($controller->create($data));
+    break;
 
   case 'update':
     requireAdmin();

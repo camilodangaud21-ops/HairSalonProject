@@ -40,8 +40,7 @@ class team_crud {
     $role          = mysqli_real_escape_string($this->conn, $data['role']);
     $rating        = isset($data['rating']) && $data['rating'] !== '' ? (float) $data['rating'] : 'NULL';
     $photo         = mysqli_real_escape_string($this->conn, $data['photo']);
-    $active        = (int) $data['active'];
-    $display_order = (int) $data['display_order'];
+    $display_order = (int) ($data['display_order'] ?? 0);
 
     $sql = "INSERT INTO team (name, role, rating, photo, active, display_order)
             VALUES ('$name','$role',$rating,'$photo',1,$display_order)";

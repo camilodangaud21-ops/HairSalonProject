@@ -147,19 +147,11 @@ $settings = $settingsController->getAllAsMap();
   </div>
 
   <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'client'): ?>
-  <div class="review-form" style="margin:16px 0;">
-    <h3 style="color:var(--gold); font-size:.9rem; margin-bottom:10px;">Deja tu reseña</h3>
-    <div id="review-stars" style="font-size:1.5rem; cursor:pointer; margin-bottom:8px;">
-      <span data-val="1">☆</span><span data-val="2">☆</span><span data-val="3">☆</span><span data-val="4">☆</span><span data-val="5">☆</span>
-    </div>
-    <input type="hidden" id="review-rating" value="0" />
-    <textarea class="modal-input" id="review-comment" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
-    <button onclick="submitReview()" class="btn-reservar" style="margin-top:8px; padding:8px 20px;">Enviar reseña</button>
-    <p id="review-message" style="display:none; font-size:.8rem; margin-top:6px;"></p>
-  </div>
+  <button class="btn-reservar" style="margin:16px 0;" onclick="openReviewForm()">+ Nueva reseña</button>
   <?php endif; ?>
 
   <div id="resenas-list"></div>
+  <button id="btn-ver-todas-resenas" class="btn-login" style="display:none; margin:16px auto 0; width:100%;" onclick="loadAllReviews()">Ver todas las reseñas</button>
 </div>
 
 <footer>
@@ -186,12 +178,28 @@ $settings = $settingsController->getAllAsMap();
   <div class="footer-copy">© 2026 Isabel Rojas Beauty Salón & Spa · Cartagena, Colombia</div>
 </footer>
 
+<div id="review-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h2 class="modal-title">Deja tu reseña</h2>
+    <div id="review-stars" style="font-size:1.5rem; cursor:pointer; margin-bottom:8px;">
+      <span data-val="1">☆</span><span data-val="2">☆</span><span data-val="3">☆</span><span data-val="4">☆</span><span data-val="5">☆</span>
+    </div>
+    <input type="hidden" id="review-rating" value="0" />
+    <textarea class="modal-input" id="review-comment" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
+    <button onclick="submitReview()" class="btn-reservar" style="width:100%; padding:10px;">Enviar reseña</button>
+    <p id="review-error" class="modal-error" style="display:none;"></p>
+    <button onclick="closeReviewForm()" class="modal-cancel">Cancelar</button>
+  </div>
+</div>
+
 <div id="login-modal" class="modal-overlay">
   <div class="modal-box">
     <h2 class="modal-title">Iniciar sesión</h2>
-    <input id="login-email" class="modal-input" type="email" placeholder="Correo electrónico"/>
-    <input id="login-password" class="modal-input" type="password" placeholder="Contraseña"/>
-    <button onclick="submitLogin()" class="btn-reservar" style="width:100%; padding:10px;">Ingresar</button>
+    <form id="login-form" autocomplete="on" onsubmit="submitLogin(); return false;">
+      <input id="login-email" name="email" class="modal-input" type="email" autocomplete="username" placeholder="Correo electrónico"/>
+      <input id="login-password" name="password" class="modal-input" type="password" autocomplete="current-password" placeholder="Contraseña"/>
+      <button type="submit" class="btn-reservar" style="width:100%; padding:10px;">Ingresar</button>
+    </form>
     <button onclick="switchToRegister()" class="modal-cancel">¿No tienes cuenta? Regístrate</button>
     <p id="login-error" class="modal-error">Correo o contraseña incorrectos</p>
     <button onclick="closeLogin()" class="modal-cancel">Cancelar</button>
@@ -201,11 +209,13 @@ $settings = $settingsController->getAllAsMap();
 <div id="register-modal" class="modal-overlay">
   <div class="modal-box">
     <h2 class="modal-title">Crear cuenta</h2>
-    <input id="reg-first-name" class="modal-input" type="text" placeholder="Nombre" />
-    <input id="reg-last-name" class="modal-input" type="text" placeholder="Apellido" />
-    <input id="reg-email" class="modal-input" type="email" placeholder="Correo electrónico" />
-    <input id="reg-password" class="modal-input" type="password" placeholder="Contraseña (mín. 6 caracteres)" />
-    <button onclick="submitRegister()" class="btn-reservar" style="width:100%; padding:10px;">Crear cuenta</button>
+    <form id="register-form" autocomplete="on" onsubmit="submitRegister(); return false;">
+      <input id="reg-first-name" name="given-name" class="modal-input" type="text" autocomplete="given-name" placeholder="Nombre" />
+      <input id="reg-last-name" name="family-name" class="modal-input" type="text" autocomplete="family-name" placeholder="Apellido" />
+      <input id="reg-email" name="email" class="modal-input" type="email" autocomplete="email" placeholder="Correo electrónico" />
+      <input id="reg-password" name="new-password" class="modal-input" type="password" autocomplete="new-password" placeholder="Contraseña (mín. 6 caracteres)" />
+      <button type="submit" class="btn-reservar" style="width:100%; padding:10px;">Crear cuenta</button>
+    </form>
     <p id="reg-error" class="modal-error"></p>
     <button onclick="switchToLogin()" class="modal-cancel">¿Ya tienes cuenta? Inicia sesión</button>
   </div>

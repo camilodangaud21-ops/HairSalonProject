@@ -58,6 +58,10 @@ class reviews_controller {
     return $this->crud->getFeatured();
   }
 
+  public function getAllActive(): array {
+    return $this->crud->getAllActive();
+  }
+
   public function getAllAdmin(): array {
     return $this->crud->getAllAdmin();
   }
