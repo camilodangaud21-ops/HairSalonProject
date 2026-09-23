@@ -217,3 +217,29 @@ body {
   .admin-header + .tabs { width: 100%; }
   .admin-main { width: calc(100% - 24px); padding: 20px 0 40px; }
 }
+
+
+/* Smoother admin modal motion */
+.modal-overlay {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .38s var(--ease-smooth), visibility 0s linear .38s;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.modal-overlay .modal-box {
+  transform: translateY(20px) scale(.965);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: transform .48s var(--ease-out), opacity .32s var(--ease-smooth);
+}
+.modal-overlay.active .modal-box {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
