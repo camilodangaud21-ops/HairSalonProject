@@ -6,6 +6,15 @@
 
 const REVIEWS_API = "/peluqueria/php/api/reviews_api.php";
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 async function loadReviews() {
   try {
     const [reviewsRes, summaryRes] = await Promise.all([
@@ -79,12 +88,12 @@ function renderReviews(reviews) {
       <div class="resena-header">
         <div class="resena-avatar">😊</div>
         <div>
-          <div class="resena-name">${r.author_name}</div>
+          <div class="resena-name">${escapeHtml(r.author_name)}</div>
           <div class="resena-stars">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
           <div class="resena-date">${formatDate(r.created_at)}</div>
         </div>
       </div>
-      ${r.comment ? `<p style="font-size:.85rem; color:var(--muted); margin-top:6px;">${r.comment}</p>` : ""}
+      ${r.comment ? `<p style="font-size:.85rem; color:var(--muted); margin-top:6px;">${escapeHtml(r.comment)}</p>` : ""}
     </div>
   `,
     )
