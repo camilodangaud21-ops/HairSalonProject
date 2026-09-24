@@ -10,7 +10,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 $first_name = trim($data['first_name'] ?? '');
 $last_name  = trim($data['last_name'] ?? '');
-$email      = trim($data['email'] ?? '');
+$email      = strtolower(trim($data['email'] ?? ''));
 $password   = trim($data['password'] ?? '');
 
 //validation
@@ -50,15 +50,39 @@ if(!$ok){
     exit;
 }
 
-// automatically log in the user after registration
-$user = $crud->getByEmail($email);
-$_SESSION['user'] = [
-    'id'         => $user['id'],
-    'first_name' => $user['first_name'],
-    'last_name'  => $user['last_name'],
-    'email'      => $user['email'],
-    'role'       => $user['role'],
-];
+$token = bin2hex(random_bytes(32));
+$tokenHash = hash('sha256', $token);
+$expiresAt = date('Y-m-d H:i:s', time() + 1800);
 
-echo json_encode(['success'  => true,'redirect' => '/peluqueria/index.php',]);
+$ok = $crud->create([
+    'first_name' => $first_name,
+    'last_name'  => $last_name,
+    'email'      => $email,
+    'password'   => $password,
+    'role'       => 'client',
+    'email_verified' => false,
+    'verification_token_hash' => $tokenHash,
+    'verification_expires_at' => $expiresAt,
+]);
+
+if(!$ok){
+    echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario']);
+    exit;
+}
+
+require_once __DIR__ . '/../config/mail.php';
+
+if (!sendVerificationEmail($email, $first_name, $token)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'La cuenta fue creada, pero no pudimos enviar el correo de verificación. Inténtalo de nuevo más tarde.'
+    ]);
+    exit;
+}
+
+echo json_encode([
+    'success' => true,
+    'message' => 'Cuenta creada. Revisa tu correo y haz clic en el botón de verificación para activarla.',
+    'requires_verification' => true
+]);
 ?>
