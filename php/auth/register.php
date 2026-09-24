@@ -12,6 +12,7 @@ $first_name = trim($data['first_name'] ?? '');
 $last_name  = trim($data['last_name'] ?? '');
 $email      = strtolower(trim($data['email'] ?? ''));
 $password   = trim($data['password'] ?? '');
+$password_confirm = trim($data['password_confirm'] ?? '');
 
 //validation
 if(empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
@@ -26,6 +27,11 @@ if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 if(strlen($password) < 6) {
     echo json_encode(['success' => false, 'message' => 'La contraseña debe tener al menos 6 caracteres']);
+    exit;
+}
+
+if($password !== $password_confirm) {
+    echo json_encode(['success' => false, 'message' => 'Las contraseñas no coinciden']);
     exit;
 }
 
