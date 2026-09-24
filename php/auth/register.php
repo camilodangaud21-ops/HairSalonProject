@@ -37,19 +37,6 @@ if($crud->getByEmail($email)) {
     exit;
 }
 
-$ok = $crud->create([
-    'first_name' => $first_name,
-    'last_name'  => $last_name,
-    'email'      => $email,
-    'password'   => $password,
-    'role'       => 'client',
-]);
-
-if(!$ok){
-    echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario']);
-    exit;
-}
-
 $token = bin2hex(random_bytes(32));
 $tokenHash = hash('sha256', $token);
 $expiresAt = date('Y-m-d H:i:s', time() + 1800);
