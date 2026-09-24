@@ -1,5 +1,5 @@
 <?php
-// Verification email delivery. Production should provide a real SMTP/mail transport.
+// Verification email delivery. Uses PHP mail() for local development.
 function app_base_url(): string {
     $configured = getenv('APP_URL');
     if ($configured) {
