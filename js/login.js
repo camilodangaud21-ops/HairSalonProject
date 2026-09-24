@@ -78,7 +78,7 @@ async function submitRegister() {
     if (data.success) {
       closeRegister();
       if (typeof showAlert === "function") {
-        showAlert(data.message, "success", { duration: 6500 });
+        showAlert(data.message, data.email_sent === false ? "warning" : "success", { duration: 7500 });
       }
       document.getElementById("register-form").reset();
     } else {
@@ -86,7 +86,7 @@ async function submitRegister() {
       errorEl.style.display = "block";
     }
   } catch (err) {
-    errorEl.textContent   = "Error de conexión, intenta de nuevo.";
+    errorEl.textContent   = "No pudimos completar la solicitud. Comprueba que el servidor esté disponible e inténtalo de nuevo.";
     errorEl.style.display = "block";
   }
 }
