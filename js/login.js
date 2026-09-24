@@ -76,7 +76,11 @@ async function submitRegister() {
     const data = await res.json();
 
     if (data.success) {
-      window.location.href = data.redirect;
+      closeRegister();
+      if (typeof showAlert === "function") {
+        showAlert(data.message, "success", { duration: 6500 });
+      }
+      document.getElementById("register-form").reset();
     } else {
       errorEl.textContent   = data.message;
       errorEl.style.display = "block";
