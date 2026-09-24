@@ -17,9 +17,9 @@ $settings = $settingsController->getAllAsMap();
 
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/components.css" />\n  <?php if (isset($_SESSION['user']) && ($_SESSION['user']['role'] ?? '') === 'client'): ?><link rel="stylesheet" href="css/client.css" /><?php endif; ?>
 </head>
-<body>
+<body>\n<?php if (isset($_SESSION['user']) && ($_SESSION['user']['role'] ?? '') === 'client'): ?><?php require __DIR__ . '/php/client/_sidebar.php'; ?><?php endif; ?>
 
 <!-- HERO -->
 <div class="hero">
@@ -229,7 +229,7 @@ $settings = $settingsController->getAllAsMap();
   const SITE_WHATSAPP = <?= json_encode($settings['whatsapp_number'] ?? '573000000000') ?>;
 </script>
 <script src="js/alerts.js"></script>
-<script src="js/login.js"></script>
+<script src="js/login.js"></script>\n<?php if (isset($_SESSION['user']) && ($_SESSION['user']['role'] ?? '') === 'client'): ?><script src="js/client.js"></script><?php endif; ?>
 <script src="js/categories.js"></script>
 <script src="js/services.js"></script>
 <script src="js/tabs.js"></script>
