@@ -59,17 +59,14 @@ if(!$ok){
 
 require_once __DIR__ . '/../config/mail.php';
 
-if (!sendVerificationEmail($email, $first_name, $token)) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'La cuenta fue creada, pero no pudimos enviar el correo de verificación. Inténtalo de nuevo más tarde.'
-    ]);
-    exit;
-}
+$emailSent = sendVerificationEmail($email, $first_name, $token);
 
 echo json_encode([
     'success' => true,
-    'message' => 'Cuenta creada. Revisa tu correo y haz clic en el botón de verificación para activarla.',
-    'requires_verification' => true
+    'message' => $emailSent
+        ? 'Cuenta creada. Revisa tu correo y haz clic en el botón de verificación para activarla.'
+        : 'Cuenta creada, pero no pudimos enviar el correo de verificación. Puedes solicitar un nuevo correo desde el inicio de sesión.',
+    'requires_verification' => true,
+    'email_sent' => $emailSent
 ]);
 ?>
