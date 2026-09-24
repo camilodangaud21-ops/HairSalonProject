@@ -71,7 +71,7 @@ echo json_encode([
     'success' => true,
     'message' => $emailSent
         ? 'Cuenta creada. Revisa tu correo y haz clic en el botón de verificación para activarla.'
-        : 'Cuenta creada, pero no pudimos enviar el correo de verificación. Puedes solicitar un nuevo correo desde el inicio de sesión.',
+        : 'Cuenta creada, pero no pudimos enviar el correo de verificación. Si estás trabajando en XAMPP, revisa si el antivirus o firewall está bloqueando la conexión SMTP. También puedes usar “Reenviar correo de verificación” desde el inicio de sesión.',
     'requires_verification' => true,
     'email_sent' => $emailSent
 ]);
