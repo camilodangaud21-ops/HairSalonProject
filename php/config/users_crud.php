@@ -81,6 +81,17 @@ class users_crud {
       WHERE id = $id");
   }
 
+  public function setVerificationToken(int $id, string $tokenHash, string $expiresAt): bool {
+    $tokenHash = mysqli_real_escape_string($this->conn, $tokenHash);
+    $expiresAt = mysqli_real_escape_string($this->conn, $expiresAt);
+    return mysqli_query($this->conn, "UPDATE users SET
+      email_verification_token = '$tokenHash',
+      email_verification_expires = '$expiresAt',
+      email_verified = 0
+      WHERE id = $id");
+  }
+
+
   //update user
   public function update(int $id, array $data): bool {
     $first_name = mysqli_real_escape_string($this->conn, $data['first_name']);
