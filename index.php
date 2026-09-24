@@ -201,7 +201,10 @@ $settings = $settingsController->getAllAsMap();
       <button type="submit" class="btn-reservar" style="width:100%; padding:10px;">Ingresar</button>
     </form>
     <button onclick="switchToRegister()" class="modal-cancel">¿No tienes cuenta? Regístrate</button>
-    <p id="login-error" class="modal-error">Correo o contraseña incorrectos</p>
+    <p id="login-error" class="modal-error" style="display:none;"></p>
+    <div id="resend-verification-wrap" style="display:none; margin-top:10px;">
+      <button type="button" id="resend-verification-btn" class="modal-cancel" onclick="resendVerification()">Reenviar correo de verificación</button>
+    </div>
     <button onclick="closeLogin()" class="modal-cancel">Cancelar</button>
   </div>
 </div>
@@ -214,6 +217,7 @@ $settings = $settingsController->getAllAsMap();
       <input id="reg-last-name" name="family-name" class="modal-input" type="text" autocomplete="family-name" placeholder="Apellido" />
       <input id="reg-email" name="email" class="modal-input" type="email" autocomplete="email" placeholder="Correo electrónico" />
       <input id="reg-password" name="new-password" class="modal-input" type="password" autocomplete="new-password" placeholder="Contraseña (mín. 6 caracteres)" />
+      <input id="reg-password-confirm" name="new-password-confirm" class="modal-input" type="password" autocomplete="new-password" placeholder="Confirmar contraseña" />
       <button type="submit" class="btn-reservar" style="width:100%; padding:10px;">Crear cuenta</button>
     </form>
     <p id="reg-error" class="modal-error"></p>
