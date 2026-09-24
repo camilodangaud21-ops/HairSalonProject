@@ -39,7 +39,7 @@ if (!$crud->setVerificationToken((int)$user['id'], $tokenHash, $expiresAt)) {
 if (!sendVerificationEmail($email, $user['first_name'], $token)) {
     echo json_encode([
         'success' => false,
-        'message' => 'No pudimos enviar el correo ahora. Revisa la configuración SMTP del servidor e inténtalo de nuevo.'
+        'message' => 'No pudimos enviar el correo de verificación. Si estás trabajando en XAMPP, revisa si el antivirus o firewall está bloqueando la conexión SMTP. En un servidor/hosting, revisa también las restricciones de salida SMTP.'
     ]);
     exit;
 }
