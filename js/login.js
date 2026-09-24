@@ -83,6 +83,7 @@ async function submitRegister() {
         last_name:  lastName,
         email,
         password,
+        password_confirm: confirmPassword,
       }),
     });
     const data = await res.json();
