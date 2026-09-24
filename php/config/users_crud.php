@@ -41,11 +41,44 @@ class users_crud {
     $email      = mysqli_real_escape_string($this->conn, $data['email']);
     $password   = password_hash($data['password'], PASSWORD_BCRYPT);
     $role       = mysqli_real_escape_string($this->conn, $data['role']);
+    $email_verified = !empty($data['email_verified']) ? 1 : 0;
+    $verification_token_hash = !empty($data['verification_token_hash'])
+      ? mysqli_real_escape_string($this->conn, $data['verification_token_hash'])
+      : '';
+    $verification_expires_at = !empty($data['verification_expires_at'])
+      ? mysqli_real_escape_string($this->conn, $data['verification_expires_at'])
+      : '';
 
-    $sql = "INSERT INTO users (first_name, last_name, email, password, role)
-            VALUES ('$first_name','$last_name','$email','$password','$role')";
+    $sql = "INSERT INTO users (
+              first_name, last_name, email, password, role,
+              email_verified, email_verification_token, email_verification_expires
+            ) VALUES (
+              '$first_name','$last_name','$email','$password','$role',
+              $email_verified,
+              " . ($verification_token_hash !== '' ? "'$verification_token_hash'" : "NULL") . ",
+              " . ($verification_expires_at !== '' ? "'$verification_expires_at'" : "NULL") . "
+            )";
 
     return mysqli_query($this->conn, $sql);
+  }
+
+  public function verifyEmailByTokenHash(string $tokenHash): array|null {
+    $tokenHash = mysqli_real_escape_string($this->conn, $tokenHash);
+    $result = mysqli_query($this->conn, "SELECT * FROM users
+      WHERE email_verification_token = '$tokenHash'
+        AND email_verification_expires > NOW()
+        AND email_verified = 0
+      LIMIT 1");
+
+    return mysqli_fetch_assoc($result) ?: null;
+  }
+
+  public function markEmailVerified(int $id): bool {
+    return mysqli_query($this->conn, "UPDATE users SET
+      email_verified = 1,
+      email_verification_token = NULL,
+      email_verification_expires = NULL
+      WHERE id = $id");
   }
 
   //update user
