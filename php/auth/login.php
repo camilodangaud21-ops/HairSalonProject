@@ -9,7 +9,7 @@ header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-$email    = trim($data['email'] ?? '');
+$email    = strtolower(trim($data['email'] ?? ''));
 $password = trim($data['password'] ?? '');
 
 if ($email === '' || $password === '') {
@@ -29,6 +29,17 @@ if (!password_verify($password, $user['password'])) {
   echo json_encode(['success' => false, 'message' => 'Correo o contraseña incorrectos']);
   exit;
 }
+
+if (isset($user['email_verified']) && (int)$user['email_verified'] !== 1) {
+  echo json_encode([
+    'success' => false,
+    'requires_verification' => true,
+    'message' => 'Debes verificar tu correo antes de iniciar sesión.'
+  ]);
+  exit;
+}
+
+session_regenerate_id(true);
 
 $_SESSION['user'] = [
   'id'         => $user['id'],
