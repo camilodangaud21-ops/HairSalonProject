@@ -13,7 +13,7 @@ let searchQuery    = "";
 
 async function loadServices() {
   try {
-    const res  = await fetch("/peluqueria/php/api/services_api.php?action=all");
+    const res  = await fetch(`${APP_BASE_URL}/php/api/services_api.php?action=all`);
     const data = await res.json();
 
     services = data.map((s) => ({
@@ -52,7 +52,7 @@ function renderServices(list) {
 
     const thumbHtml = s.imagen
   ? `<div class="service-thumb-wrap">
-       <img class="service-thumb-img" src="/peluqueria/${s.imagen}" alt="${s.nombre}" />
+       <img class="service-thumb-img" src="${APP_BASE_URL}/${s.imagen}" alt="${s.nombre}" />
        <div class="thumb-overlay ${catClass[s.cat] || "cat-pelq"}">
          <span>${catLabel[s.cat] || s.cat}</span>
        </div>
