@@ -1,8 +1,9 @@
 <?php
-session_start();
+require_once __DIR__ . '/session.php';
+start_app_session();
 require_once __DIR__ . '/../config/conection.php';
 require_once __DIR__ . '/../config/users_crud.php';
-require_once __DIR__ . '/../config/mail.php';
+require_once __DIR__ . '/../config/app.php';
 
 $token = trim($_GET['token'] ?? '');
 
@@ -15,7 +16,7 @@ function verificationPage(string $title, string $message, bool $success = false)
         . '<div style="font-size:42px;margin-bottom:12px">' . ($success ? '✓' : '!') . '</div>'
         . '<h1 style="color:' . $color . ';font-weight:600">' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</h1>'
         . '<p style="color:#8a8278;line-height:1.6">' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</p>'
-        . '<a href="' . htmlspecialchars(app_base_url(), ENT_QUOTES, 'UTF-8') . '/index.php' . '" style="display:inline-block;margin-top:16px;padding:11px 18px;background:#c9a84c;color:#0f0e0c;text-decoration:none;border-radius:8px;font-weight:bold">Ir al sitio</a>'
+        . '<a href="' . htmlspecialchars(app_url('index.php'), ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;margin-top:16px;padding:11px 18px;background:#c9a84c;color:#0f0e0c;text-decoration:none;border-radius:8px;font-weight:bold">Ir al sitio</a>'
         . '</main></body></html>';
     exit;
 }
@@ -35,6 +36,7 @@ if (!$crud->markEmailVerified((int)$user['id'])) {
     verificationPage('No se pudo verificar', 'Ocurrió un error al activar tu correo. Inténtalo nuevamente.');
 }
 
+session_regenerate_id(true);
 $_SESSION['user'] = [
     'id' => $user['id'],
     'first_name' => $user['first_name'],
