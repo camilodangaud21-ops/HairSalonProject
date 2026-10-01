@@ -5,7 +5,7 @@
    <select> in sync.
    ══════════════════════════════════════════ */
 
-const CATEGORIES_API = "/peluqueria/php/api/categories_api.php";
+const CATEGORIES_API = `${APP_BASE_URL}/php/api/categories_api.php`;
 
 let categories        = [];
 let editingCategoryId = null;
