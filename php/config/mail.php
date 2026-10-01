@@ -1,6 +1,8 @@
 <?php
 // Email delivery via SMTP. Credentials are read from environment variables or
 // php/config/mail.local.php (which must stay out of Git).
+require_once __DIR__ . '/app.php';
+
 function mail_config(): array {
     $localFile = __DIR__ . '/mail.local.php';
     $local = file_exists($localFile) ? require $localFile : [];
@@ -13,20 +15,6 @@ function mail_config(): array {
         'from_name' => $local['MAIL_FROM_NAME'] ?? getenv('MAIL_FROM_NAME') ?: 'Isabel Rojas Beauty Salón & Spa',
         'app_url' => rtrim($local['APP_URL'] ?? getenv('APP_URL') ?: '', '/'),
     ];
-}
-
-function app_base_url(): string {
-    $cfg = mail_config();
-    if ($cfg['app_url'] !== '') return $cfg['app_url'];
-
-    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-        || (($_SERVER['SERVER_PORT'] ?? '') === '443');
-    $scheme = $https ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-    $base = preg_replace('#/php/auth(?:/[^/]*)?$#', '', $script);
-
-    return $scheme . '://' . $host . rtrim($base, '/');
 }
 
 function smtp_read($socket): string {
@@ -57,7 +45,7 @@ function sendVerificationEmail(string $email, string $firstName, string $token):
         return false;
     }
 
-    $verifyUrl = app_base_url() . '/php/auth/verify_email.php?token=' . rawurlencode($token);
+    $verifyUrl = app_url('php/auth/verify_email.php?token=' . rawurlencode($token));
     $siteName = $cfg['from_name'];
     $safeName = htmlspecialchars($firstName, ENT_QUOTES, 'UTF-8');
     $safeUrl = htmlspecialchars($verifyUrl, ENT_QUOTES, 'UTF-8');
