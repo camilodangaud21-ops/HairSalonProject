@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../php/config/app.php';
 if (!isset($user) || !is_array($user)) {
     $user = $_SESSION['user'] ?? [];
 }
@@ -9,12 +10,9 @@ $initials = strtoupper(
     substr($user['last_name'] ?? 'D', 0, 1)
 );
 
-$projectBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
-if (basename($projectBase) === 'client') {
-    $projectBase = rtrim(str_replace('\\', '/', dirname($projectBase)), '/');
-}
-$clientUrl = $projectBase . '/client';
-$logoutUrl = $projectBase . '/php/auth/logout.php';
+$projectBase = rtrim(app_base_url(), '/');
+$clientUrl = app_url('client');
+$logoutUrl = app_url('php/auth/logout.php');
 $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 $isHome = $currentPage === 'index.php' || $currentPage === '';
 $isProfile = $currentPage === 'profile.php';
@@ -29,7 +27,7 @@ $isAccount = $currentPage === 'account.php';
 <div class="client-drawer-head"><span>MI CUENTA</span><button type="button" onclick="closeClientDrawer()" aria-label="Cerrar">✕</button></div>
 <div class="client-drawer-profile"><span class="client-avatar client-avatar-lg"><?= htmlspecialchars($initials) ?></span><strong><?= htmlspecialchars($clientName) ?></strong><small>✓ Correo verificado</small></div>
 <nav class="client-nav">
-<a href="<?= htmlspecialchars($projectBase . '/index.php') ?>">🏠 <span>Volver al inicio</span></a>
+<a href="<?= htmlspecialchars(app_url('index.php')) ?>">🏠 <span>Volver al inicio</span></a>
 <a class="<?= $isProfile ? 'active' : '' ?>" href="<?= htmlspecialchars($clientUrl . '/profile.php') ?>">👤 <span>Mi perfil</span></a>
 <a class="<?= $isReservations ? 'active' : '' ?>" href="<?= htmlspecialchars($clientUrl . '/reservations.php') ?>">📅 <span>Mis reservas</span></a>
 <a class="<?= $isCalendar ? 'active' : '' ?>" href="<?= htmlspecialchars($clientUrl . '/calendar.php') ?>">🕐 <span>Mi horario</span></a>
