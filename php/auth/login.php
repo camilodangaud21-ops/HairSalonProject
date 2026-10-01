@@ -1,16 +1,16 @@
 <?php
-// Auth: login API
-session_start();
-require_once '../config/conection.php';
-require_once '../models/users.php';
-require_once '../config/users_crud.php';
+require_once __DIR__ . '/session.php';
+start_app_session();
+require_once __DIR__ . '/../config/app.php';
+require_once __DIR__ . '/../config/conection.php';
+require_once __DIR__ . '/../models/users.php';
+require_once __DIR__ . '/../config/users_crud.php';
 
 header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
-
-$email    = strtolower(trim($data['email'] ?? ''));
-$password = trim($data['password'] ?? '');
+$email = strtolower(trim($data['email'] ?? ''));
+$password = (string)($data['password'] ?? '');
 
 if ($email === '' || $password === '') {
   echo json_encode(['success' => false, 'message' => 'Correo y contraseña son obligatorios']);
@@ -20,12 +20,7 @@ if ($email === '' || $password === '') {
 $crud = new users_crud();
 $user = $crud->getByEmail($email);
 
-if (!$user) {
-  echo json_encode(['success' => false, 'message' => 'Correo o contraseña incorrectos']);
-  exit;
-}
-
-if (!password_verify($password, $user['password'])) {
+if (!$user || !password_verify($password, $user['password'])) {
   echo json_encode(['success' => false, 'message' => 'Correo o contraseña incorrectos']);
   exit;
 }
@@ -42,18 +37,18 @@ if (isset($user['email_verified']) && (int)$user['email_verified'] !== 1) {
 session_regenerate_id(true);
 
 $_SESSION['user'] = [
-  'id'         => $user['id'],
+  'id' => $user['id'],
   'first_name' => $user['first_name'],
-  'last_name'  => $user['last_name'],
-  'email'      => $user['email'],
-  'role'       => $user['role'],
+  'last_name' => $user['last_name'],
+  'email' => $user['email'],
+  'role' => $user['role'],
 ];
 
 echo json_encode([
-  'success'  => true,
-  'role'     => $user['role'],
+  'success' => true,
+  'role' => $user['role'],
   'redirect' => $user['role'] === 'admin'
-    ? '/peluqueria/admin/pages/dashboard.php'
-    : '/peluqueria/index.php',
+    ? app_url('admin/pages/dashboard.php')
+    : app_url('index.php'),
 ]);
 ?>
