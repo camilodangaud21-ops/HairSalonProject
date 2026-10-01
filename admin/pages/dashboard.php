@@ -1,29 +1,27 @@
 <?php
-session_start();
-// Admin dashboard page
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
-  header('Location: /peluqueria/index.php');
-  exit;
-}
+require_once __DIR__ . '/../../php/auth/session.php';
+require_once __DIR__ . '/../../php/config/app.php';
+$user = require_authenticated_user('admin');
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script>const APP_BASE_URL = <?= json_encode(app_base_url()) ?>;</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel Admin - Isabel Rojas Beauty Salón & Spa</title>
-  <link rel="stylesheet" href="/peluqueria/css/base.css" />
-  <link rel="stylesheet" href="/peluqueria/css/layout.css" />
-  <link rel="stylesheet" href="/peluqueria/css/components.css" />
-  <link rel="stylesheet" href="/peluqueria/admin/css/admin.css" />
+  <link rel="stylesheet" href="<?= app_base_url() ?>/css/base.css" />
+  <link rel="stylesheet" href="<?= app_base_url() ?>/css/layout.css" />
+  <link rel="stylesheet" href="<?= app_base_url() ?>/css/components.css" />
+  <link rel="stylesheet" href="<?= app_base_url() ?>/admin/css/admin.css" />
 </head>
 <body>
 <header class="admin-header">
   <h1>Panel de administración</h1>
   <div class="admin-header-right">
     <span>Hola, <?= htmlspecialchars($_SESSION['user']['first_name']) ?></span>
-    <a href="/peluqueria/index.php" class="btn-login">🏠 Ir al sitio</a>
-    <a href="/peluqueria/php/auth/logout.php" class="btn-login">👤 Cerrar sesión</a>
+    <a href="<?= app_base_url() ?>/index.php" class="btn-login">🏠 Ir al sitio</a>
+    <a href="<?= app_base_url() ?>/php/auth/logout.php" class="btn-login">👤 Cerrar sesión</a>
   </div>
 </header>
 
@@ -114,12 +112,12 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
   <button onclick="saveReview()" class="btn-reservar" style="width:100%; padding:10px;">Guardar</button><p id="review-error" class="modal-error" style="display:none;"></p><button onclick="closeReviewForm()" class="modal-cancel">Cancelar</button>
 </div></div>
 
-<script src="/peluqueria/js/alerts.js"></script>
-<script src="/peluqueria/admin/js/admin_settings.js"></script>
-<script src="/peluqueria/admin/js/admin_services.js"></script>
-<script src="/peluqueria/admin/js/admin_team.js"></script>
-<script src="/peluqueria/admin/js/admin_categories.js"></script>
-<script src="/peluqueria/admin/js/admin_reviews.js"></script>
-<script src="/peluqueria/admin/js/admin_core.js"></script>
+<script src="<?= app_base_url() ?>/js/alerts.js"></script>
+<script src="<?= app_base_url() ?>/admin/js/admin_settings.js"></script>
+<script src="<?= app_base_url() ?>/admin/js/admin_services.js"></script>
+<script src="<?= app_base_url() ?>/admin/js/admin_team.js"></script>
+<script src="<?= app_base_url() ?>/admin/js/admin_categories.js"></script>
+<script src="<?= app_base_url() ?>/admin/js/admin_reviews.js"></script>
+<script src="<?= app_base_url() ?>/admin/js/admin_core.js"></script>
 </body>
 </html>
