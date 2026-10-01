@@ -9,7 +9,7 @@ let catLabel = {};
 
 async function loadCategories() {
   try {
-    const res        = await fetch("/peluqueria/php/api/categories_api.php?action=all");
+    const res        = await fetch(`${APP_BASE_URL}/php/api/categories_api.php?action=all`);
     const categories = await res.json();
 
     catClass = {};
