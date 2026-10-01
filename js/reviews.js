@@ -4,7 +4,7 @@
    the API and renders them on the public page.
    ══════════════════════════════════════════ */
 
-const REVIEWS_API = "/peluqueria/php/api/reviews_api.php";
+const REVIEWS_API = `${APP_BASE_URL}/php/api/reviews_api.php`;
 
 function escapeHtml(value) {
   return String(value ?? "")
