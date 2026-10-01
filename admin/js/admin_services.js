@@ -1,4 +1,4 @@
-const SERVICES_API = "/peluqueria/php/api/services_api.php";
+const SERVICES_API = `${APP_BASE_URL}/php/api/services_api.php`;
 
 let services  = [];
 let editingId = null;
@@ -16,7 +16,7 @@ function renderServicesTable() {
     <tr style="${s.active == 0 ? "opacity:.5;" : ""}">
       <td>
         ${s.image
-          ? `<img src="/peluqueria/${s.image}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin-right:6px;" />`
+          ? `<img src="${APP_BASE_URL}/${s.image}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;margin-right:6px;" />`
           : "—"}
         ${s.name}
       </td>
@@ -96,7 +96,7 @@ function editService(id) {
   // mostrar preview si ya tiene imagen
   const preview = document.getElementById("service-image-preview");
   if (s.image) {
-    preview.src           = `/peluqueria/${s.image}`;
+    preview.src           = `${APP_BASE_URL}/${s.image}`;
     preview.style.display = "block";
   } else {
     preview.src           = "";
