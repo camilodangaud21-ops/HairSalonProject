@@ -1,1 +1,4 @@
-<?php session_start(); if (!isset($_SESSION['user']) || ($_SESSION['user']['role'] ?? '') !== 'client') { header('Location: ../index.php'); exit; } $user=$_SESSION['user']; ?>
+<?php
+require_once __DIR__ . '/../php/auth/session.php';
+$user = require_authenticated_user('client');
+?>
