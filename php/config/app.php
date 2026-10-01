@@ -3,6 +3,13 @@
 // Example: https://www.tudominio.com
 function app_base_url(): string {
     $configured = trim((string)(getenv('APP_URL') ?: ''));
+    if ($configured === '') {
+        $localFile = __DIR__ . '/mail.local.php';
+        if (file_exists($localFile)) {
+            $local = require $localFile;
+            $configured = trim((string)($local['APP_URL'] ?? ''));
+        }
+    }
     if ($configured !== '') {
         return rtrim($configured, '/');
     }
