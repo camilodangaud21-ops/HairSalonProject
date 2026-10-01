@@ -36,9 +36,9 @@ $settings = $settingsController->getAllAsMap();
   <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
     <?php if (isset($_SESSION['user'])): ?>
       <?php if ($_SESSION['user']['role'] === 'admin'): ?>
-        <a href="admin/pages/dashboard.php" class="btn-login">⚙️ Panel admin</a>
+        <a href="<?= htmlspecialchars(app_url('admin/pages/dashboard.php')) ?>" class="btn-login">⚙️ Panel admin</a>
       <?php else: ?>
-        <a href="php/auth/logout.php" class="btn-login">👤 Cerrar sesión</a>
+        <button type="button" class="btn-login" onclick="toggleClientDrawer()">👤 Mi cuenta</button>
       <?php endif; ?>
     <?php else: ?>
       <button class="btn-login" onclick="openLogin()">Iniciar sesión</button>
