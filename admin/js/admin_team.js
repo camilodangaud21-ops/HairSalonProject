@@ -3,7 +3,7 @@
    CRUD table + modal for team members.
    ══════════════════════════════════════════ */
 
-const TEAM_API = "/peluqueria/php/api/team_api.php";
+const TEAM_API = `${APP_BASE_URL}/php/api/team_api.php`;
 
 let teamMembers   = [];
 let editingTeamId = null;
@@ -20,7 +20,7 @@ function renderTeamTable() {
     <tr style="${m.active == 0 ? "opacity:.5;" : ""}">
       <td>
         ${m.photo
-          ? `<img src="/peluqueria/${m.photo}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:6px;" />`
+          ? `<img src="${APP_BASE_URL}/${m.photo}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;margin-right:6px;" />`
           : "—"}
         ${m.name}
       </td>
@@ -74,7 +74,7 @@ function editTeamMember(id) {
 
   const preview = document.getElementById("team-photo-preview");
   if (m.photo) {
-    preview.src           = `/peluqueria/${m.photo}`;
+    preview.src           = `${APP_BASE_URL}/${m.photo}`;
     preview.style.display = "block";
   } else {
     preview.src           = "";
