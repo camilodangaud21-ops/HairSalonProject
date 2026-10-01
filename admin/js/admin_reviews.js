@@ -12,7 +12,7 @@ function escapeHtml(value) {
    Table for moderating reviews.
 ══════════════════════════════════════════ */
 
-const ADMIN_REVIEWS_API = "/peluqueria/php/api/reviews_api.php";
+const ADMIN_REVIEWS_API = `${APP_BASE_URL}/php/api/reviews_api.php`;
 
 let adminReviews = [];
 
