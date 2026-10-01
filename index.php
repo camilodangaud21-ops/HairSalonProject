@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/php/auth/session.php';
+require_once __DIR__ . '/php/config/app.php';
+start_app_session();
 // Public homepage: renders site with settings
 require_once 'php/controllers/settings_controller.php';
 require_once 'php/controllers/team_controller.php';
@@ -228,6 +230,7 @@ $settings = $settingsController->getAllAsMap();
 </div>
 
 <script>
+  const APP_BASE_URL = <?= json_encode(app_base_url()) ?>;
   const SITE_WHATSAPP = <?= json_encode($settings['whatsapp_number'] ?? '573000000000') ?>;
 </script>
 <script src="js/alerts.js"></script>
