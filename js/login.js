@@ -131,15 +131,44 @@ async function resendVerification() {
       if (typeof showAlert === "function") {
         showAlert(data.message, "success", { duration: 7500 });
       }
+      startVerificationCooldown(data.retry_after || 60);
     } else {
       errorEl.textContent = data.message;
       errorEl.style.display = "block";
+      if (data.retry_after) startVerificationCooldown(data.retry_after);
     }
   } catch (err) {
     errorEl.textContent = "No pudimos reenviar el correo. Comprueba que el servidor esté disponible e inténtalo de nuevo.";
     errorEl.style.display = "block";
   } finally {
-    resendBtn.disabled = false;
-    resendBtn.textContent = "Reenviar correo de verificación";
+    if (!window.__verificationCooldown) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = "Reenviar correo de verificación";
+    }
   }
+}
+
+
+function startVerificationCooldown(seconds) {
+  const resendBtn = document.getElementById("resend-verification-btn");
+  if (!resendBtn) return;
+
+  clearInterval(window.__verificationCooldownTimer);
+  window.__verificationCooldown = true;
+  let remaining = Math.max(1, Number(seconds) || 60);
+
+  const tick = () => {
+    resendBtn.disabled = true;
+    resendBtn.textContent = `Reenviar en ${remaining}s`;
+    if (remaining <= 0) {
+      clearInterval(window.__verificationCooldownTimer);
+      window.__verificationCooldown = false;
+      resendBtn.disabled = false;
+      resendBtn.textContent = "Reenviar correo de verificación";
+    }
+    remaining -= 1;
+  };
+
+  tick();
+  window.__verificationCooldownTimer = setInterval(tick, 1000);
 }
