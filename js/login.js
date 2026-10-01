@@ -17,7 +17,7 @@ async function submitLogin() {
   const errorEl  = document.getElementById("login-error");
 
   try {
-    const res  = await fetch("/peluqueria/php/auth/login.php", {
+    const res  = await fetch(`${APP_BASE_URL}/php/auth/login.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -75,7 +75,7 @@ async function submitRegister() {
   }
 
   try {
-    const res  = await fetch("/peluqueria/php/auth/register.php", {
+    const res  = await fetch(`${APP_BASE_URL}/php/auth/register.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -119,7 +119,7 @@ async function resendVerification() {
   resendBtn.textContent = "Enviando...";
 
   try {
-    const res = await fetch("/peluqueria/php/auth/resend_verification.php", {
+    const res = await fetch(`${APP_BASE_URL}/php/auth/resend_verification.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
