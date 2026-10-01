@@ -4,9 +4,9 @@
    about us, schedule, address).
    ══════════════════════════════════════════ */
 
-const SETTINGS_API = "/peluqueria/php/api/settings_api.php";
-const SITE_BASE    = "/peluqueria/";
-const UPLOAD_API   = "/peluqueria/php/api/upload_api.php";
+const SETTINGS_API = `${APP_BASE_URL}/php/api/settings_api.php`;
+const SITE_BASE = APP_BASE_URL + "/";
+const UPLOAD_API   = "${APP_BASE_URL}/php/api/upload_api.php";
 
 async function loadSettings() {
   try {
