@@ -11,30 +11,24 @@ class users_crud {
     $this->conn = $conn;
   }
 
-  //read all
   public function getAll(): array {
     $result = mysqli_query($this->conn, "SELECT * FROM users");
-    $users  = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-      $users[] = $row;
-    }
+    $users = [];
+    while ($row = mysqli_fetch_assoc($result)) $users[] = $row;
     return $users;
   }
 
-  //read by id
   public function getById(int $id): array|null {
     $result = mysqli_query($this->conn, "SELECT * FROM users WHERE id = $id");
     return mysqli_fetch_assoc($result) ?: null;
   }
 
-  //read by email
   public function getByEmail(string $email): array|null {
-    $email  = mysqli_real_escape_string($this->conn, $email);
+    $email = mysqli_real_escape_string($this->conn, $email);
     $result = mysqli_query($this->conn, "SELECT * FROM users WHERE email = '$email'");
     return mysqli_fetch_assoc($result) ?: null;
   }
 
-  //create user
   public function create(array $data): bool {
     $first_name = mysqli_real_escape_string($this->conn, $data['first_name']);
     $last_name  = mysqli_real_escape_string($this->conn, $data['last_name']);
@@ -69,7 +63,6 @@ class users_crud {
         AND email_verification_expires > NOW()
         AND email_verified = 0
       LIMIT 1");
-
     return mysqli_fetch_assoc($result) ?: null;
   }
 
@@ -77,7 +70,8 @@ class users_crud {
     return mysqli_query($this->conn, "UPDATE users SET
       email_verified = 1,
       email_verification_token = NULL,
-      email_verification_expires = NULL
+      email_verification_expires = NULL,
+      email_verification_last_sent_at = NULL
       WHERE id = $id");
   }
 
@@ -91,8 +85,23 @@ class users_crud {
       WHERE id = $id");
   }
 
+  public function markVerificationEmailSent(int $id): bool {
+    return mysqli_query($this->conn, "UPDATE users SET
+      email_verification_last_sent_at = NOW()
+      WHERE id = $id AND email_verified = 0");
+  }
 
-  //update user
+  public function getVerificationResendCooldown(int $id, int $cooldownSeconds = 60): int {
+    $result = mysqli_query($this->conn, "SELECT email_verification_last_sent_at FROM users WHERE id = $id LIMIT 1");
+    $row = mysqli_fetch_assoc($result);
+    if (!$row || empty($row['email_verification_last_sent_at'])) return 0;
+
+    $lastSent = strtotime($row['email_verification_last_sent_at']);
+    if ($lastSent === false) return 0;
+
+    return max(0, $cooldownSeconds - (time() - $lastSent));
+  }
+
   public function update(int $id, array $data): bool {
     $first_name = mysqli_real_escape_string($this->conn, $data['first_name']);
     $last_name  = mysqli_real_escape_string($this->conn, $data['last_name']);
@@ -103,14 +112,11 @@ class users_crud {
               last_name  = '$last_name',
               email      = '$email'
             WHERE id = $id";
-
     return mysqli_query($this->conn, $sql);
   }
 
-  //delete user (hard delete, since there is no 'active' column)
   public function delete(int $id): bool {
     return mysqli_query($this->conn, "DELETE FROM users WHERE id = $id");
   }
-
 }
 ?>
