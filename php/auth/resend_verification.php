@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . '/session.php';
+start_app_session();
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/users_crud.php';
@@ -17,7 +18,11 @@ $crud = new users_crud();
 $user = $crud->getByEmail($email);
 
 if (!$user) {
-    echo json_encode(['success' => false, 'message' => 'No encontramos una cuenta con ese correo.']);
+    // Keep the response generic so this endpoint cannot be used to enumerate accounts.
+    echo json_encode([
+        'success' => true,
+        'message' => 'Si existe una cuenta pendiente de verificación con ese correo, recibirás un nuevo mensaje.'
+    ]);
     exit;
 }
 
@@ -26,7 +31,16 @@ if (isset($user['email_verified']) && (int)$user['email_verified'] === 1) {
     exit;
 }
 
-// Generate a fresh token so an old link cannot be reused.
+$retryAfter = $crud->getVerificationResendCooldown((int)$user['id'], 60);
+if ($retryAfter > 0) {
+    echo json_encode([
+        'success' => false,
+        'retry_after' => $retryAfter,
+        'message' => "Espera {$retryAfter} segundos antes de solicitar otro correo."
+    ]);
+    exit;
+}
+
 $token = bin2hex(random_bytes(32));
 $tokenHash = hash('sha256', $token);
 $expiresAt = date('Y-m-d H:i:s', time() + 1800);
@@ -39,13 +53,16 @@ if (!$crud->setVerificationToken((int)$user['id'], $tokenHash, $expiresAt)) {
 if (!sendVerificationEmail($email, $user['first_name'], $token)) {
     echo json_encode([
         'success' => false,
-        'message' => 'No pudimos enviar el correo de verificación. Si estás trabajando en XAMPP, revisa si el antivirus o firewall está bloqueando la conexión SMTP. En un servidor/hosting, revisa también las restricciones de salida SMTP.'
+        'message' => 'No pudimos enviar el correo de verificación. Revisa la configuración SMTP o el firewall del servidor.'
     ]);
     exit;
 }
 
+$crud->markVerificationEmailSent((int)$user['id']);
+
 echo json_encode([
     'success' => true,
+    'retry_after' => 60,
     'message' => 'Te enviamos un nuevo correo de verificación. Revisa también la carpeta de spam.'
 ]);
 ?>
