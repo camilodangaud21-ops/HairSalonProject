@@ -65,7 +65,8 @@ if (!$ok) {
 
 $emailSent = sendVerificationEmail($email, $first_name, $token);
 if ($emailSent) {
-    $crud->markVerificationEmailSent((int)mysqli_insert_id($GLOBALS['conn']));
+    $createdUser = $crud->getByEmail($email);
+    if ($createdUser) $crud->markVerificationEmailSent((int)$createdUser['id']);
 }
 
 echo json_encode([
